@@ -7,7 +7,42 @@
 //
 
 #import "SyncpointAuth.h"
+#import "Syncpoint.h"
+#import "TDMisc.h"
+
 
 @implementation SyncpointAuth
+
+
+- (id) initWithSyncpoint: (Syncpoint*)syncpoint {
+    self = [super init];
+    if (self) {
+        _syncpoint = syncpoint;
+    }
+    return self;
+}
+
+
+@synthesize syncpoint=_syncpoint;
+
+
+- (NSString*) authDocType {
+    AssertAbstractMethod();
+}
+
+
+- (void) initiatePairing {
+    AssertAbstractMethod();
+}
+
+
+- (void) removePairing {
+}
+
+
+- (BOOL) handleOpenURL: (NSURL*)url {
+    return NO;
+}
+
 
 @end

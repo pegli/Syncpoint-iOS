@@ -7,29 +7,30 @@
 //
 
 #import <Foundation/Foundation.h>
-@class Facebook, CouchServer, CouchReplication, CouchDocument;
+@class SyncpointAuth, CouchServer, CouchReplication, CouchDocument;
 
 
+/** Syncpoint client-side controller: pairs with the server and tracks channels and subscriptions. */
 @interface Syncpoint : NSObject
 {
     @private
+    SyncpointAuth* _authenticator;
     NSURL* _remote;
     CouchServer* _server;
     CouchDatabase* _sessionDatabase;
     NSString* _appDatabaseName;
     CouchReplication *_sessionPull;
     CouchReplication *_sessionPush;
+    BOOL _observingSessionPull;
     CouchDocument *_sessionDoc;
     NSError* _error;
-    NSString* _facebookAppID;
-    Facebook *_facebook;
     BOOL _sessionSynced;
 }
 
-- (id) initWithLocalServer: (CouchServer*)localServer remoteServer: (NSURL*)remoteServerURL;
-- (id) initWithRemoteServer: (NSURL*)remoteServerURL;
+- (id) initWithLocalServer: (CouchServer*)localServer
+              remoteServer: (NSURL*)remoteServerURL
+             authenticator: (SyncpointAuth*)authenticator;
 
-@property NSString* facebookAppID;
 @property NSString* appDatabaseName;
 
 @property (readonly) NSError* error;
@@ -37,10 +38,16 @@
 - (BOOL) start;
 
 - (void) initiatePairing;
-- (void) removePairing;
 
-
-/** Call this from your app delegate's -application:handleOpenURL: method. */
+/** Call this from your app delegate's -application:handleOpenURL: method.
+    @return  YES if Syncpoint's authenticator handled the URL, else NO. */
 - (BOOL) handleOpenURL: (NSURL*)url;
+
+
+
+/** Should be called only by the authenticator. */
+- (void) authenticatedWithToken: (id)accessToken
+                         ofType: (NSString*)tokenType;
+- (void) authenticationFailed;
 
 @end

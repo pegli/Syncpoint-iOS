@@ -7,7 +7,7 @@
 //
 
 #import "Syncpoint.h"
-#import "Facebook.h"
+#import "SyncpointAuth.h"
 #import <CouchCocoa/CouchCocoa.h>
 #import "TDMisc.h"
 
@@ -15,41 +15,38 @@
 #define kSessionDatabaseName @"sessions"
 
 
-@interface Syncpoint () <FBSessionDelegate, FBRequestDelegate>
+@interface Syncpoint ()
 @property (readwrite) NSError* error;
 @property NSString* syncpointSessionId;
-- (void) connectToControlDb;
-- (void) syncSessionDocument;
-- (BOOL) sessionIsActive;
-- (void) sessionDatabaseChanged;
-- (void) getUpToDateWithSubscriptions;
 @end
 
 
 @implementation Syncpoint
 
 
-@synthesize error=_error, facebookAppID=_facebookAppID, appDatabaseName=_appDatabaseName;
+@synthesize error=_error, appDatabaseName=_appDatabaseName;
 
 
-- (id) initWithLocalServer: (CouchServer*)localServer remoteServer: (NSURL*)remoteServerURL {
+- (id) initWithLocalServer: (CouchServer*)localServer
+              remoteServer: (NSURL*)remoteServerURL
+             authenticator: (SyncpointAuth*)authenticator
+{
     CAssert(localServer);
     CAssert(remoteServerURL);
+    CAssert(authenticator);
     self = [super init];
     if (self) {
         _server = localServer;
         _remote = remoteServerURL;
+        _authenticator = authenticator;
     }
     return self;
 }
 
-- (id) initWithRemoteServer:(NSURL *)remoteServerURL {
-    return [self initWithLocalServer: [CouchTouchDBServer sharedInstance] 
-                        remoteServer: remoteServerURL];
-}
 
 - (void)dealloc
 {
+    [self stopObservingSessionPull];
     [[NSNotificationCenter defaultCenter] removeObserver: self];
 }
 
@@ -68,33 +65,19 @@
 
     NSString* sessionID = self.syncpointSessionId;
     if (sessionID) {
-        LogTo(SyncPoint, @"has session");
         _sessionDoc = [_sessionDatabase documentWithID: sessionID];
-        if ([self sessionIsActive]) {
-            //        setup sync with the user control database
-            LogTo(SyncPoint, @"go directly to user control");
+        if (self.sessionIsActive) {
+            // Setup sync with the user control database
+            LogTo(Syncpoint, @"Session is active -- go directly to user control");
             _sessionSynced = YES;
             [self connectToControlDb];
-            [[NSNotificationCenter defaultCenter] addObserver: self 
-                                                     selector: @selector(sessionDatabaseChanged)
-                                                         name: kCouchDatabaseChangeNotification 
-                                                       object: _sessionDatabase];
+            [self observeSessionDatabase];
         } else {
-            LogTo(SyncPoint, @"session not active");
+            LogTo(Syncpoint, @"session not active");
             [self syncSessionDocument];
         }
     } else {
-        LogTo(SyncPoint, @"no session");
-        
-        // Setup Facebook:
-        _facebook = [[Facebook alloc] initWithAppId: _facebookAppID andDelegate: self];
-        NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
-        NSString* accessToken = [defaults objectForKey:@"Syncpoint_FBAccessToken"];
-        NSDate* expirationDate = [defaults objectForKey:@"Syncpoint_FBExpirationDate"];
-        if (accessToken && expirationDate) {
-            _facebook.accessToken = accessToken;
-            _facebook.expirationDate = expirationDate;
-        }
+        LogTo(Syncpoint, @"no session");
     }
 
     return YES;
@@ -102,16 +85,13 @@
 
 
 - (void) initiatePairing {
-    if (![_facebook isSessionValid])
-        [_facebook authorize:nil];
+    [_authenticator initiatePairing];
 }
 
-- (void) removePairing {
-    //    todo: delete the session document
-    //    [sessionDocument delete]
-    [_facebook logout];
-}
 
+- (BOOL) handleOpenURL: (NSURL*)url {
+    return [_authenticator handleOpenURL: url];
+}
 
 
 - (id)syncpointSessionId {
@@ -125,20 +105,24 @@
 }
 
 
--(BOOL)sessionIsActive {
-    Assert(_sessionDoc);
-    LogTo(SyncPoint, @"sessionIsActive? %@",[_sessionDoc.properties objectForKey:@"state"]);
-    return [[_sessionDoc.properties objectForKey:@"state"] isEqualToString:@"active"];
+- (BOOL)sessionIsActive {
+    return _sessionDoc && [[_sessionDoc.properties objectForKey:@"state"] isEqual: @"active"];
 }
 
 
--(void) syncSessionDocument {
+- (NSString*) myUserID {
+    return [[_sessionDoc.properties objectForKey:@"session"] objectForKey:@"user_id"];
+}
+
+
+// Starts an async bidirectional sync of the _sessionDoc in the _sessionDatabase.
+- (void) syncSessionDocument {
     NSURL* sessionSyncDbURL = [NSURL URLWithString: kSessionDatabaseName relativeToURL: _remote];
     [[_sessionDatabase pushToDatabaseAtURL: sessionSyncDbURL] start];
-    LogTo(SyncPoint, @"syncSessionDocument pushing");
+    LogTo(Syncpoint, @"syncSessionDocument pushing");
     
     _sessionPull = [_sessionDatabase pullFromDatabaseAtURL: sessionSyncDbURL];
-    //    todo add a by docid read rule so I only see my document
+    // TODO: add a by docid read rule so I only see my document
     
     NSString *docIdsString = [NSString stringWithFormat:@"[\"%@\"]",
                               _sessionDoc.documentID];
@@ -146,69 +130,69 @@
     _sessionPull.filterParams = $dict({@"doc_ids", docIdsString});
     _sessionPull.continuous = YES;
     [_sessionPull start];
-    LogTo(SyncPoint, @"syncSessionDocument pulled");
+    LogTo(Syncpoint, @"syncSessionDocument pulled");
     
     //    ok now we should listen to changes on the session db and stop replication 
     //    when we get our doc back in a finalized state
     _sessionSynced = NO;
-    LogTo(SyncPoint, @"observing session db");
-    [[NSNotificationCenter defaultCenter] addObserver: self 
-                                             selector: @selector(sessionDatabaseChanged)
-                                                 name: kCouchDatabaseChangeNotification 
-                                               object: _sessionDatabase];
+    [self observeSessionDatabase];
 }
 
 
--(CouchDocument*) makeInstallationForSubscription: (CouchDocument*)subscription
-                                withDatabaseNamed:(NSString*) name
+- (CouchDocument*) makeInstallationForSubscription: (CouchDocument*)subscription
+                                 withDatabaseNamed: (NSString*)name
+                                             error: (NSError**)outError
 {
-    CouchDocument *installation = [_sessionDatabase untitledDocument];
-    if (name == nil) {
+    if (!name)
         name = [@"channel-" stringByAppendingString:[self randomString]];
-    }
-    CouchDatabase *channelDb = [_server databaseNamed: name];
-    LogTo(SyncPoint, @"create channel db %@",name);
+    LogTo(Syncpoint, @"create channel db %@",name);
     
     // Create the session database on the first run of the app.
-    NSError* error;
-    if (![channelDb ensureCreated: &error]) {
-        LogTo(SyncPoint, @"could not create channel db %@",name);
-        exit(-1);
+    CouchDatabase *channelDb = [_server databaseNamed: name];
+    if (![channelDb ensureCreated: outError]) {
+        LogTo(Syncpoint, @"could not create channel db %@",name);
+        return nil;
     }
-    [[[installation putProperties:[NSDictionary dictionaryWithObjectsAndKeys:
-                                   name, @"local_db_name", 
-                                   [subscription.properties objectForKey:@"owner_id"], @"owner_id", 
-                                   [subscription.properties objectForKey:@"channel_id"], @"channel_id", 
-                                   _sessionDoc.documentID, @"session_id", 
-                                   subscription.documentID, @"subscription_id", 
-                                   @"installation",@"type",
-                                   @"created",@"state",
-                                   nil]] start] wait];
+    
+    NSDictionary* subscriptionProps = subscription.properties;
+    
+    CouchDocument *installation = [_sessionDatabase untitledDocument];
+    RESTOperation* op = [installation putProperties: $dict(
+                           {@"type", @"installation"},
+                           {@"state", @"created"},
+                           {@"session_id", _sessionDoc.documentID},
+                           {@"local_db_name", name},
+                           {@"subscription_id", subscription.documentID},
+                           {@"owner_id", [subscriptionProps objectForKey: @"owner_id"]},
+                           {@"channel_id", [subscriptionProps objectForKey: @"channel_id"]})];
+    if (![[op start] wait]) {
+        LogTo(Syncpoint, @"could not create installation doc: %@", op.error);
+        if (outError)
+            *outError = op.error;
+        return nil;
+    }
     return installation;
 }
 
 
--(CouchDocument*) makeSubscriptionForChannel: (CouchDocument*)channel
-                                  andOwnerId: (NSString*) ownerId
+- (CouchDocument*) makeSubscriptionForChannel: (CouchDocument*)channel
+                                   andOwnerId: (NSString*) ownerId
 {
     CouchDocument *subscription = [_sessionDatabase untitledDocument];
-    [[[subscription putProperties:[NSDictionary dictionaryWithObjectsAndKeys:
-                                   ownerId, @"owner_id", 
-                                   channel.documentID, @"channel_id", 
-                                   @"subscription",@"type",
-                                   @"active",@"state",
-                                   nil]] start] wait];
+    RESTOperation* op = [subscription putProperties: $dict(
+                           {@"type", @"subscription"},
+                           {@"state", @"active"},
+                           {@"owner_id", ownerId},
+                           {@"channel_id", channel.documentID})];
+    if (![[op start] wait]) {
+        LogTo(Syncpoint, @"could not create subscription doc: %@", op.error);
+        return nil;
+    }
     return subscription;
 }
 
 
--(void) maybeInitializeDefaultChannel {
-    CouchQueryEnumerator *rows = [[_sessionDatabase getAllDocuments] rows];
-    CouchQueryRow *row;
-    
-    CouchDocument *channel = nil; // global, owned by user and private by default
-    CouchDocument *subscription = nil; // user
-    CouchDocument *installation = nil; // per session
+- (void) maybeInitializeDefaultChannel {
     //    if we have a channel owned by the user, and it is flagged default == true,
     //    then we don't need to make a channel doc or a subscription,
     //    but we do need to make an installation doc that references the subscription.
@@ -220,77 +204,82 @@
     
     //    note: need a channel doc and a subscription doc only makes sense when you need to 
     //    allow for channels that are shared by multiple users.
-    NSString *myUserId= [[_sessionDoc.properties objectForKey:@"session"] objectForKey:@"user_id"];
-    while ((row = [rows nextRow])) { 
-        if ([[row.documentProperties objectForKey:@"type"] isEqualToString:@"channel"] && [[row.documentProperties objectForKey:@"owner_id"] isEqualToString:myUserId] && ([row.documentProperties objectForKey:@"default"] == [NSNumber numberWithBool:YES])) {
+    CouchDocument *channel = nil; // global, owned by user and private by default
+    NSString *myUserId= self.myUserID;
+    for (CouchQueryRow* row in [[_sessionDatabase getAllDocuments] rows]) {
+        NSDictionary* docProps = row.documentProperties;
+        if ([[docProps objectForKey:@"type"] isEqual: @"channel"]
+                && [[docProps objectForKey: @"owner_id"] isEqual: myUserId]
+                && ([docProps objectForKey: @"default"] == $true)) {
             channel = row.document;
+            break;
         }
     }
+    
+    CouchDocument *subscription = nil; // user
+    CouchDocument *installation = nil; // per session
     if (channel) {
-        //    TODO use a query
-        CouchQueryEnumerator *rows2 = [[_sessionDatabase getAllDocuments] rows];
-        while ((row = [rows2 nextRow])) {
-            if ([[row.documentProperties objectForKey:@"local_db_name"] isEqualToString:_appDatabaseName] && [[row.documentProperties objectForKey:@"session_id"] isEqualToString:_sessionDoc.documentID] && [[row.documentProperties objectForKey:@"channel_id"] isEqualToString:channel.documentID]) {
+        // TODO: use a query
+        for (CouchQueryRow* row in [[_sessionDatabase getAllDocuments] rows]) {
+            NSDictionary* docProps = row.documentProperties;
+            if ([[docProps objectForKey:@"local_db_name"] isEqual: _appDatabaseName]
+                    && [[docProps objectForKey:@"session_id"] isEqual: _sessionDoc.documentID]
+                    && [[docProps objectForKey:@"channel_id"] isEqual: channel.documentID]) {
                 installation =  row.document;
-            } else if ([[row.documentProperties objectForKey:@"type"] isEqualToString:@"subscription"] && [[row.documentProperties objectForKey:@"owner_id"] isEqualToString:myUserId] && [[row.documentProperties objectForKey:@"channel_id"] isEqualToString:channel.documentID]) {
+            } else if ([[docProps objectForKey:@"type"] isEqual:@"subscription"]
+                       && [[docProps objectForKey:@"owner_id"] isEqual: myUserId] 
+                       && [[docProps objectForKey:@"channel_id"] isEqual: channel.documentID]) {
                 subscription = row.document;
             }
         }
-        LogTo(SyncPoint, @"channel %@", channel.description);
-        LogTo(SyncPoint, @"subscription %@", subscription.description);
-        LogTo(SyncPoint, @"installation %@", installation.description);
-        if (subscription) {
-            if (installation) {
-                //                we are set, sync will trigger based on the installation
-            } else {
-                //                we have a subscription and a channel (created on another device)
-                //                but we do not have a local installation, so let's make one
-                installation = [self makeInstallationForSubscription: subscription
-                                                   withDatabaseNamed:_appDatabaseName];
-            }
-        } else {
-            //            channel but no subscription, maybe we crashed earlier or had a partial sync
+        LogTo(Syncpoint, @"channel %@", channel.description);
+        LogTo(Syncpoint, @"subscription %@", subscription.description);
+        LogTo(Syncpoint, @"installation %@", installation.description);
+        if (!subscription) {
+            // channel but no subscription, maybe we crashed earlier or had a partial sync
             subscription = [self makeSubscriptionForChannel: channel andOwnerId:myUserId];
-            if (installation) {
-                //                we already have an install doc for the local device, this should never happen
-            } else {
-                installation = [self makeInstallationForSubscription: subscription
-                                                   withDatabaseNamed:_appDatabaseName];
-            }
+            if (installation)
+                Warn(@"already have an install doc for the local device; this should never happen");
         }
     } else {
         //     make a channel, subscription, and installation
         channel = [_sessionDatabase untitledDocument];
-        [[[channel putProperties:[NSDictionary dictionaryWithObjectsAndKeys:
-                                  @"Default List", @"name",
-                                  [NSNumber numberWithBool:YES], @"default",
-                                  @"channel",@"type",
-                                  myUserId, @"owner_id", 
-                                  @"new",@"state",
-                                  nil]] start] wait];
-        subscription = [self makeSubscriptionForChannel: channel andOwnerId:myUserId];
-        installation = [self makeInstallationForSubscription: subscription
-                                           withDatabaseNamed:_appDatabaseName];
+        RESTOperation* op = [channel putProperties: $dict({@"type", @"channel"},
+                                                          {@"state", @"new"},
+                                                          {@"name", @"Default List"},
+                                                          {@"default", $true},
+                                                          {@"owner_id", myUserId})];
+        if (![[op start] wait]) {
+            Warn(@"Syncpoint: Failed to create channel doc: %@", op.error);
+            return;
+        }
+        subscription = [self makeSubscriptionForChannel: channel andOwnerId: myUserId];
     }
+    
+    if (!installation)
+        installation = [self makeInstallationForSubscription: subscription
+                                           withDatabaseNamed: _appDatabaseName
+                                                       error: nil];
 }
 
 
 - (NSURL*) controlDBURL {
-    NSString* controlDBName = [[_sessionDoc.properties objectForKey:@"session"]
-                                        objectForKey:@"control_database"];
+    NSString* controlDBName = [[_sessionDoc.properties objectForKey: @"session"]
+                                        objectForKey: @"control_database"];
     return [NSURL URLWithString: controlDBName relativeToURL: _remote];
 }
 
 
--(void)connectToControlDb {
-    NSAssert([self sessionIsActive], @"session must be active");
+- (void)connectToControlDb {
+    Assert(self.sessionIsActive);
     NSURL* controlDBURL = self.controlDBURL;
-    LogTo(SyncPoint, @"connecting to control database %@",controlDBURL);
+    LogTo(Syncpoint, @"connecting to control database %@",controlDBURL);
     
     _sessionPull = [_sessionDatabase pullFromDatabaseAtURL: controlDBURL];
     [_sessionPull start];
-    LogTo(SyncPoint, @" _sessionPull running %d",_sessionPull.running);
+    LogTo(Syncpoint, @" _sessionPull running %d",_sessionPull.running);
     [_sessionPull addObserver: self forKeyPath: @"running" options: 0 context: NULL];
+    _observingSessionPull = YES;
     
     _sessionPush = [_sessionDatabase pushToDatabaseAtURL: controlDBURL];
     _sessionPush.continuous = YES;
@@ -298,15 +287,24 @@
 }
 
 
-- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object 
-                         change:(NSDictionary *)change context:(void *)context
+- (void) stopObservingSessionPull {
+    if (_observingSessionPull) {
+        [_sessionPull removeObserver: self forKeyPath: @"running"];
+        _observingSessionPull = NO;
+    }
+}
+
+
+- (void) observeValueForKeyPath: (NSString*)keyPath ofObject: (id)object 
+                         change: (NSDictionary*)change context: (void*)context
 {
-    LogTo(SyncPoint, @" observeValueForKeyPath _sessionPull running %d",_sessionPull.running);
+    LogTo(Syncpoint, @" observeValueForKeyPath _sessionPull running %d",_sessionPull.running);
     if (object == _sessionPull && !_sessionPull.running) {
         NSURL* controlDBURL = self.controlDBURL;
-        [_sessionPull removeObserver: self forKeyPath: @"running"];
+        [self stopObservingSessionPull];
         [_sessionPull stop];
-        LogTo(SyncPoint, @"finished first pull, checking channels status");
+        _sessionPull = nil;
+        LogTo(Syncpoint, @"finished first pull, checking channels status");
         [self maybeInitializeDefaultChannel];
         [self getUpToDateWithSubscriptions];
         _sessionPull = [_sessionDatabase pullFromDatabaseAtURL: controlDBURL];
@@ -316,67 +314,63 @@
 }
 
 
--(NSMutableArray*) activeSubscriptionsWithoutInstallations {
+- (NSArray*) activeSubscriptionsWithoutInstallations {
     NSMutableArray *subs = [NSMutableArray array];
     NSMutableArray *installed_sub_ids = [NSMutableArray array];
-    NSMutableArray *results = [NSMutableArray array];
-    NSString *myUserId= [[_sessionDoc.properties objectForKey:@"session"] objectForKey:@"user_id"];
-    CouchQueryEnumerator *rows = [[_sessionDatabase getAllDocuments] rows];
-    CouchQueryRow *row;
-    while ((row = [rows nextRow])) {
-        if ([[row.documentProperties objectForKey:@"type"] isEqualToString:@"subscription"] && [[row.documentProperties objectForKey:@"owner_id"] isEqualToString:myUserId] && [[row.documentProperties objectForKey:@"state"] isEqualToString:@"active"]) {
+    NSString *myUserId = self.myUserID;
+    for (CouchQueryRow *row in [[_sessionDatabase getAllDocuments] rows]) {
+        NSDictionary* docProperties = row.documentProperties;
+        if ([[docProperties objectForKey:@"type"] isEqual:@"subscription"]
+                && [[docProperties objectForKey:@"owner_id"] isEqual: myUserId]
+                && [[docProperties objectForKey:@"state"] isEqual: @"active"]) {
             [subs addObject:row.document];
-        } else if ([[row.documentProperties objectForKey:@"type"] isEqualToString:@"installation"] && [[row.documentProperties objectForKey:@"session_id"] isEqualToString:_sessionDoc.documentID]) {
-            [installed_sub_ids addObject:[row.documentProperties objectForKey:@"subscription_id"]];
+        } else if ([[docProperties objectForKey:@"type"] isEqual: @"installation"]
+                   && [[docProperties objectForKey:@"session_id"] isEqual:_sessionDoc.documentID]) {
+            [installed_sub_ids addObject: [docProperties objectForKey: @"subscription_id"]];
         }
     }
-    [subs enumerateObjectsUsingBlock:^(CouchDocument *obj, NSUInteger idx, BOOL *stop) {
-        if (NSNotFound == [installed_sub_ids indexOfObjectPassingTest:^(id sid, NSUInteger idx, BOOL *end){
-            return [sid isEqualToString:obj.documentID];
-        }]) {
-            [results addObject:obj];
-        }
+    
+    return [subs my_filter: ^(CouchDocument* doc) {
+        return ![installed_sub_ids containsObject: doc.documentID];
     }];
-    return results;
 }
 
 
--(NSMutableArray*) createdInstallationsWithReadyChannels {
-    NSString *myUserId= [[_sessionDoc.properties objectForKey:@"session"] objectForKey:@"user_id"];
-    CouchQueryEnumerator *rows = [[_sessionDatabase getAllDocuments] rows];
-    CouchQueryRow *row;
+- (NSArray*) createdInstallationsWithReadyChannels {
+    NSString *myUserId = self.myUserID;
     NSMutableArray *installs = [NSMutableArray array];
-    NSMutableArray *results = [NSMutableArray array];
     NSMutableArray *ready_channel_ids = [NSMutableArray array];
-    while ((row = [rows nextRow])) {
-        if ([[row.documentProperties objectForKey:@"type"] isEqualToString:@"installation"] && [[row.documentProperties objectForKey:@"state"] isEqualToString:@"created"] && [[row.documentProperties objectForKey:@"session_id"] isEqualToString:_sessionDoc.documentID]) {
-            [installs addObject:row.document];
-        } else if ([[row.documentProperties objectForKey:@"type"] isEqualToString:@"channel"] && [[row.documentProperties objectForKey:@"state"] isEqualToString:@"ready"] && [[row.documentProperties objectForKey:@"owner_id"] isEqualToString:myUserId]) {
-            [ready_channel_ids addObject:row.documentID];
+    for (CouchQueryRow *row in [[_sessionDatabase getAllDocuments] rows]) {
+        NSDictionary* docProperties = row.documentProperties;
+        if ([[docProperties objectForKey:@"type"] isEqual:@"installation"]
+                && [[docProperties objectForKey:@"state"] isEqual:@"created"]
+                && [[docProperties objectForKey:@"session_id"] isEqual:_sessionDoc.documentID]) {
+            [installs addObject: row.document];
+        } else if ([[docProperties objectForKey:@"type"] isEqual:@"channel"]
+                   && [[docProperties objectForKey:@"state"] isEqual:@"ready"]
+                   && [[docProperties objectForKey:@"owner_id"] isEqual:myUserId]) {
+            [ready_channel_ids addObject: row.documentID];
         }
     }
-    [installs enumerateObjectsUsingBlock:^(CouchDocument *obj, NSUInteger idx, BOOL *stop) {
-        if (NSNotFound != [ready_channel_ids indexOfObjectPassingTest:^(id chid, NSUInteger idx, BOOL *end){
-            return [chid isEqualToString:[obj.properties objectForKey:@"channel_id"]];
-        }]) {
-            [results addObject:obj];
-        }
+    
+    return [installs my_filter: ^int(CouchDocument* doc) {
+        NSString* channelID = [doc.properties objectForKey:@"channel_id"];
+        return [ready_channel_ids containsObject: channelID];
     }];
-    return results;
 }
 
 
--(void) getUpToDateWithSubscriptions {
-    LogTo(SyncPoint, @"getUpToDateWithSubscriptions");
-    for (id needInstall in self.activeSubscriptionsWithoutInstallations)
-        [self makeInstallationForSubscription: needInstall withDatabaseNamed:nil];
+- (void) getUpToDateWithSubscriptions {
+    LogTo(Syncpoint, @"getUpToDateWithSubscriptions");
+    for (CouchDocument* needInstall in self.activeSubscriptionsWithoutInstallations)
+        [self makeInstallationForSubscription: needInstall withDatabaseNamed: nil error: nil];
 
-    for (CouchDocument *obj in [self createdInstallationsWithReadyChannels]) {
-        LogTo(SyncPoint, @"setup sync for installation %@", obj);
-        //        TODO setup sync with the database listed in "cloud_database" on the channel doc
-        //        this means we need the server side to actually make some channels "ready" first
-        CouchDocument *channelDoc = [_sessionDatabase documentWithID:[obj.properties objectForKey:@"channel_id"]];
-        CouchDatabase *localChannelDb = [_server databaseNamed: [obj.properties objectForKey:@"local_db_name"]];
+    for (CouchDocument *installation in [self createdInstallationsWithReadyChannels]) {
+        LogTo(Syncpoint, @"setup sync for installation %@", installation);
+        // TODO: setup sync with the database listed in "cloud_database" on the channel doc
+        // This means we need the server side to actually make some channels "ready" first
+        CouchDocument *channelDoc = [_sessionDatabase documentWithID:[installation.properties objectForKey:@"channel_id"]];
+        CouchDatabase *localChannelDb = [_server databaseNamed: [installation.properties objectForKey:@"local_db_name"]];
         NSString* cloudChannelName = [channelDoc.properties objectForKey:@"cloud_database"];
         NSURL *cloudChannelURL = [NSURL URLWithString: cloudChannelName relativeToURL: _remote];
         CouchReplication *pull = [localChannelDb pullFromDatabaseAtURL:cloudChannelURL];
@@ -387,20 +381,29 @@
 }
 
 
--(void)sessionDatabaseChanged {
-    LogTo(SyncPoint, @"sessionDatabaseChanged _sessionSynced: %d", _sessionSynced);
+- (void) observeSessionDatabase {
+    Assert(_sessionDatabase);
+    LogTo(Syncpoint, @"observing session db");
+    [[NSNotificationCenter defaultCenter] addObserver: self 
+                                             selector: @selector(sessionDatabaseChanged)
+                                                 name: kCouchDatabaseChangeNotification 
+                                               object: _sessionDatabase];
+}
+
+- (void)sessionDatabaseChanged {
+    LogTo(Syncpoint, @"sessionDatabaseChanged: _sessionSynced: %d", _sessionSynced);
     if (!_sessionSynced && self.sessionIsActive) {
         if (_sessionPull && _sessionPush) {
-            LogTo(SyncPoint, @"switch to user control db, pull %@ push %@", _sessionPull, _sessionPush);
+            LogTo(Syncpoint, @"switch to user control db, pull %@ push %@", _sessionPull, _sessionPush);
             [_sessionPull stop];
-            LogTo(SyncPoint, @"stopped pull, stopping push");
+            LogTo(Syncpoint, @"stopped pull, stopping push");
             [_sessionPush stop];
         }
         _sessionSynced = YES;
         
         [self connectToControlDb];
     } else {
-        LogTo(SyncPoint, @"change on local session db");
+        LogTo(Syncpoint, @"change on local session db");
         //        re run state manager for subscription docs
         [self getUpToDateWithSubscriptions];
     }
@@ -414,40 +417,41 @@
 }
 
 
-- (NSMutableDictionary*) randomOAuthCreds {
-    return [NSMutableDictionary dictionaryWithObjectsAndKeys:
-            [self randomString], @"consumer_key",
-            [self randomString], @"consumer_secret",
-            [self randomString], @"token_secret",
-            [self randomString], @"token",
-            nil];
+- (NSDictionary*) randomOAuthCreds {
+    return $dict({@"consumer_key", [self randomString]},
+                 {@"consumer_secret", [self randomString]},
+                 {@"token_secret", [self randomString]},
+                 {@"token", [self randomString]});
 }
 
 
-- (void)getSyncpointSessionFromFBAccessToken:(id) accessToken {
-    //  it's possible we could log into facebook even though we already have
+#pragma mark - CALLBACKS FROM AUTHENTICATOR:
+
+
+- (void) authenticatedWithToken: (id)accessToken
+                         ofType: (NSString*)tokenType
+{
+    //  it's possible we could authenticate even though we already have
     //  a Syncpoint session. This guard is to prevent extra requests.
     if (![self syncpointSessionId]) {
-        //        save a document that has the facebook access code, to the handshake database.
-        //        the document also needs to have the oath credentials we'll use when replicating.
-        //        the server will use the access code to find the facebook uid, which we can use to 
-        //        look up the syncpoint user, and link these credentials to that user (establishing our session)
-        NSMutableDictionary *sessionData = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                            accessToken, @"fb_access_token",
-                                            [self randomOAuthCreds], @"oauth_creds",
-                                            @"new", @"state",
-                                            @"session-fb",@"type",
-                                            //      todo this document needs to have our devices SSL cert signature in it
-                                            //      so we can enforce that only this device can read this document
-                                            nil];
-        LogTo(SyncPoint, @"session data %@",[sessionData description]);
+        // save a document that has the auth access code, to the handshake database.
+        // the document also needs to have the oath credentials we'll use when replicating.
+        // the server will use the access code to find the service uid, which we can use to 
+        // look up the syncpoint user, and link these credentials to that user (establishing our session)
+        NSDictionary *sessionData = $dict({@"type", _authenticator.authDocType},
+                                          {tokenType, accessToken},
+                                          {@"oauth_creds", self.randomOAuthCreds},
+                                          {@"state", @"new"});
+        // TODO: this document needs to have our device's SSL cert signature in it
+        // so we can enforce that only this device can read this document
+        LogTo(Syncpoint, @"session data %@", sessionData);
         _sessionDoc = [_sessionDatabase untitledDocument];
         RESTOperation *op = [[_sessionDoc putProperties:sessionData] start];
-        [op onCompletion:^{
+        [op onCompletion: ^{
             if (op.error) {
-                LogTo(SyncPoint, @"op error %@",op.error);                
+                LogTo(Syncpoint, @"op error %@",op.error);                
             } else {
-                LogTo(SyncPoint, @"session doc %@",[_sessionDoc description]);
+                LogTo(Syncpoint, @"session doc %@",[_sessionDoc description]);
                 self.syncpointSessionId = _sessionDoc.documentID;
                 [self syncSessionDocument];
             }
@@ -456,42 +460,8 @@
 }
 
 
-#pragma mark - FACEBOOK GLUE:
-
-
-- (BOOL) handleOpenURL: (NSURL*)url {
-    return [_facebook handleOpenURL:url];
-}
-
-
-- (void)fbDidLogin {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject:[_facebook accessToken] forKey:@"Syncpoint_FBAccessToken"];
-    [defaults setObject:[_facebook expirationDate] forKey:@"Syncpoint_FBExpirationDate"];
-    [defaults synchronize];
-    [self getSyncpointSessionFromFBAccessToken: [_facebook accessToken]];
-}
-
-/**
- * Called when the user canceled the authorization dialog.
- */
--(void)fbDidNotLogin:(BOOL)cancelled {
+- (void) authenticationFailed {
     // we don't have anything really to do here
-}
-
-
-- (void)fbDidExtendToken:(NSString*)accessToken
-               expiresAt:(NSDate*)expiresAt
-{
-    // TODO: IMPLEMENT
-}
-
-- (void)fbDidLogout {
-    // TODO: IMPLEMENT
-}
-
-- (void)fbSessionInvalidated {
-    // TODO: IMPLEMENT
 }
 
 

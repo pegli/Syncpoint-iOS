@@ -18,6 +18,7 @@
 #import <CouchCocoa/CouchCocoa.h>
 #import <CouchCocoa/CouchTouchDBServer.h>
 #import "Syncpoint.h"
+#import "SyncpointFacebookAuth.h"
 
 
 @implementation DemoAppDelegate
@@ -56,14 +57,16 @@
 
     // Start up Syncpoint client:
     NSURL* remote = [NSURL URLWithString: @"http://single.couchbase.net/"];
-    self.syncpoint = [[Syncpoint alloc] initWithRemoteServer: remote];
-    syncpoint.facebookAppID = @"251541441584833";
+    [SyncpointFacebookAuth setFacebookAppID: @"251541441584833"];
+    self.syncpoint = [[Syncpoint alloc] initWithLocalServer: server
+                                               remoteServer: remote
+                                              authenticator: [SyncpointFacebookAuth new]];
     syncpoint.appDatabaseName = @"grocery-sync";
     if (![self.syncpoint start]) {
         NSLog(@"Syncpoint failed to start: %@", syncpoint.error);
         exit(1);
     }
-    [syncpoint initiatePairing];
+    [self.syncpoint initiatePairing];
 
     return YES;
 }
