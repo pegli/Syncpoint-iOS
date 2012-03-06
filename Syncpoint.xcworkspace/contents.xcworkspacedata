@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:Syncpoint/Syncpoint.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:CouchCocoa/CouchCocoa.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:TouchDB/TouchDB.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:vendor/facebook-ios-sdk/src/facebook-ios-sdk.xcodeproj">
+   </FileRef>
+</Workspace>

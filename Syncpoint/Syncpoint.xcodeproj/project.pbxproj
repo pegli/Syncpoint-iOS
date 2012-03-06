@@ -1,0 +1,606 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2799D1ED1505A8E200CB90E0 /* SyncpointAuth.h in Headers */ = {isa = PBXBuildFile; fileRef = 2799D1EB1505A8E200CB90E0 /* SyncpointAuth.h */; };
+		2799D1EE1505A8E200CB90E0 /* SyncpointAuth.h in Headers */ = {isa = PBXBuildFile; fileRef = 2799D1EB1505A8E200CB90E0 /* SyncpointAuth.h */; };
+		2799D1EF1505A8E200CB90E0 /* SyncpointAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = 2799D1EC1505A8E200CB90E0 /* SyncpointAuth.m */; };
+		2799D1F01505A8E200CB90E0 /* SyncpointAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = 2799D1EC1505A8E200CB90E0 /* SyncpointAuth.m */; };
+		27EB94CD14F7015800072752 /* Syncpoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 27EB94CB14F7015800072752 /* Syncpoint.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		27EB94CE14F7015800072752 /* Syncpoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EB94CC14F7015800072752 /* Syncpoint.m */; };
+		27EB94CF14F701EF00072752 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB94B014F700AC00072752 /* Foundation.framework */; };
+		27EB94F814F703A400072752 /* libCouchCocoa.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB94F714F703A400072752 /* libCouchCocoa.a */; };
+		27EB94FB14F7043C00072752 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB94FA14F7043C00072752 /* libsqlite3.dylib */; };
+		27EB94FD14F7044300072752 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB94FC14F7044300072752 /* libz.dylib */; };
+		27EB94FF14F7044900072752 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB94FE14F7044900072752 /* SystemConfiguration.framework */; };
+		27EB951414F70D4D00072752 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB94B014F700AC00072752 /* Foundation.framework */; };
+		27EB951F14F70D8800072752 /* libCouchCocoa.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB951E14F70D8800072752 /* libCouchCocoa.a */; };
+		27EB952114F70DDD00072752 /* libfacebook_ios_sdk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB952014F70DDD00072752 /* libfacebook_ios_sdk.a */; };
+		27EB952214F7107B00072752 /* Syncpoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EB94CC14F7015800072752 /* Syncpoint.m */; };
+		27EB957E14F87C6800072752 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB957D14F87C6800072752 /* UIKit.framework */; };
+		27EB957F14F87C6800072752 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB94B014F700AC00072752 /* Foundation.framework */; };
+		27EB958114F87C6800072752 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB958014F87C6800072752 /* CoreGraphics.framework */; };
+		27EB95A814F87C9700072752 /* ConfigViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EB959414F87C9700072752 /* ConfigViewController.m */; };
+		27EB95A914F87C9700072752 /* ConfigViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27EB959514F87C9700072752 /* ConfigViewController.xib */; };
+		27EB95AA14F87C9700072752 /* Demo-iOS-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 27EB959614F87C9700072752 /* Demo-iOS-Info.plist */; };
+		27EB95AB14F87C9700072752 /* DemoAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EB959914F87C9700072752 /* DemoAppDelegate.m */; };
+		27EB95AD14F87C9700072752 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 27EB959C14F87C9700072752 /* InfoPlist.strings */; };
+		27EB95AE14F87C9700072752 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 27EB959E14F87C9700072752 /* Entitlements.plist */; };
+		27EB95B014F87C9700072752 /* list_area___checkbox___checked.png in Resources */ = {isa = PBXBuildFile; fileRef = 27EB95A114F87C9700072752 /* list_area___checkbox___checked.png */; };
+		27EB95B114F87C9700072752 /* list_area___checkbox___unchecked.png in Resources */ = {isa = PBXBuildFile; fileRef = 27EB95A214F87C9700072752 /* list_area___checkbox___unchecked.png */; };
+		27EB95B214F87C9700072752 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EB95A314F87C9700072752 /* main.m */; };
+		27EB95B314F87C9700072752 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27EB95A414F87C9700072752 /* MainWindow.xib */; };
+		27EB95B414F87C9700072752 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EB95A614F87C9700072752 /* RootViewController.m */; };
+		27EB95B514F87C9700072752 /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27EB95A714F87C9700072752 /* RootViewController.xib */; };
+		27EB95B914F87D0400072752 /* libSyncpoint.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB951314F70D4D00072752 /* libSyncpoint.a */; };
+		27EB95BD14F966A600072752 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB95BC14F966A500072752 /* libsqlite3.dylib */; };
+		27EB95BF14F966B500072752 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB95BE14F966B500072752 /* Security.framework */; };
+		27EB95C114F966BB00072752 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB95C014F966BB00072752 /* SystemConfiguration.framework */; };
+		27EB95C314F96AA100072752 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB95C214F96AA000072752 /* libz.dylib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		27EB95B714F87CFE00072752 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 27EB949E14F700AC00072752 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 27EB951214F70D4D00072752;
+			remoteInfo = "Syncpoint iOS library";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		2799D1EB1505A8E200CB90E0 /* SyncpointAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyncpointAuth.h; sourceTree = "<group>"; };
+		2799D1EC1505A8E200CB90E0 /* SyncpointAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyncpointAuth.m; sourceTree = "<group>"; };
+		27EB94A814F700AC00072752 /* Syncpoint.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Syncpoint.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		27EB94B014F700AC00072752 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		27EB94CB14F7015800072752 /* Syncpoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Syncpoint.h; sourceTree = "<group>"; };
+		27EB94CC14F7015800072752 /* Syncpoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Syncpoint.m; sourceTree = "<group>"; };
+		27EB94F714F703A400072752 /* libCouchCocoa.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCouchCocoa.a; path = ../CouchCocoa/build/Release/libCouchCocoa.a; sourceTree = "<group>"; };
+		27EB94F914F7040100072752 /* Syncpoint-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Syncpoint-Info.plist"; sourceTree = "<group>"; };
+		27EB94FA14F7043C00072752 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		27EB94FC14F7044300072752 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		27EB94FE14F7044900072752 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		27EB950D14F70CF300072752 /* libfacebook_ios_sdk.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfacebook_ios_sdk.a; path = "../vendor/facebook-ios-sdk/src/build/Release-iphoneos/libfacebook_ios_sdk.a"; sourceTree = "<group>"; };
+		27EB951314F70D4D00072752 /* libSyncpoint.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSyncpoint.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		27EB951E14F70D8800072752 /* libCouchCocoa.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCouchCocoa.a; path = ../build/Syncpoint/Build/Products/Debug/libCouchCocoa.a; sourceTree = "<group>"; };
+		27EB952014F70DDD00072752 /* libfacebook_ios_sdk.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfacebook_ios_sdk.a; path = "../vendor/facebook-ios-sdk/src/build/Release-iphoneos/libfacebook_ios_sdk.a"; sourceTree = "<group>"; };
+		27EB954114F71AAC00072752 /* SyncpointPrefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SyncpointPrefix.pch; sourceTree = "<group>"; };
+		27EB957B14F87C6800072752 /* Syncpoint Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Syncpoint Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		27EB957D14F87C6800072752 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		27EB958014F87C6800072752 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
+		27EB959314F87C9700072752 /* ConfigViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigViewController.h; sourceTree = "<group>"; };
+		27EB959414F87C9700072752 /* ConfigViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigViewController.m; sourceTree = "<group>"; };
+		27EB959514F87C9700072752 /* ConfigViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConfigViewController.xib; sourceTree = "<group>"; };
+		27EB959614F87C9700072752 /* Demo-iOS-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Demo-iOS-Info.plist"; sourceTree = "<group>"; };
+		27EB959714F87C9700072752 /* Demo-iOS-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Demo-iOS-Prefix.pch"; sourceTree = "<group>"; };
+		27EB959814F87C9700072752 /* DemoAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoAppDelegate.h; sourceTree = "<group>"; };
+		27EB959914F87C9700072752 /* DemoAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoAppDelegate.m; sourceTree = "<group>"; };
+		27EB959A14F87C9700072752 /* EmptyAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmptyAppDelegate.h; sourceTree = "<group>"; };
+		27EB959B14F87C9700072752 /* EmptyAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmptyAppDelegate.m; sourceTree = "<group>"; };
+		27EB959D14F87C9700072752 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		27EB959E14F87C9700072752 /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
+		27EB95A114F87C9700072752 /* list_area___checkbox___checked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "list_area___checkbox___checked.png"; sourceTree = "<group>"; };
+		27EB95A214F87C9700072752 /* list_area___checkbox___unchecked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "list_area___checkbox___unchecked.png"; sourceTree = "<group>"; };
+		27EB95A314F87C9700072752 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		27EB95A414F87C9700072752 /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
+		27EB95A514F87C9700072752 /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
+		27EB95A614F87C9700072752 /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
+		27EB95A714F87C9700072752 /* RootViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RootViewController.xib; sourceTree = "<group>"; };
+		27EB95B614F87CDB00072752 /* Syncpoint Demo-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Syncpoint Demo-Info.plist"; sourceTree = "<group>"; };
+		27EB95BC14F966A500072752 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.0.sdk/usr/lib/libsqlite3.dylib; sourceTree = DEVELOPER_DIR; };
+		27EB95BE14F966B500072752 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.0.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
+		27EB95C014F966BB00072752 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.0.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
+		27EB95C214F96AA000072752 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.0.sdk/usr/lib/libz.dylib; sourceTree = DEVELOPER_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		27EB94A414F700AC00072752 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27EB94FF14F7044900072752 /* SystemConfiguration.framework in Frameworks */,
+				27EB94FD14F7044300072752 /* libz.dylib in Frameworks */,
+				27EB94FB14F7043C00072752 /* libsqlite3.dylib in Frameworks */,
+				27EB94F814F703A400072752 /* libCouchCocoa.a in Frameworks */,
+				27EB94CF14F701EF00072752 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27EB951014F70D4D00072752 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27EB952114F70DDD00072752 /* libfacebook_ios_sdk.a in Frameworks */,
+				27EB951F14F70D8800072752 /* libCouchCocoa.a in Frameworks */,
+				27EB951414F70D4D00072752 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27EB957814F87C6800072752 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27EB95C314F96AA100072752 /* libz.dylib in Frameworks */,
+				27EB95C114F966BB00072752 /* SystemConfiguration.framework in Frameworks */,
+				27EB95BF14F966B500072752 /* Security.framework in Frameworks */,
+				27EB95BD14F966A600072752 /* libsqlite3.dylib in Frameworks */,
+				27EB95B914F87D0400072752 /* libSyncpoint.a in Frameworks */,
+				27EB957E14F87C6800072752 /* UIKit.framework in Frameworks */,
+				27EB957F14F87C6800072752 /* Foundation.framework in Frameworks */,
+				27EB958114F87C6800072752 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		27EB949C14F700AC00072752 = {
+			isa = PBXGroup;
+			children = (
+				27EB94CB14F7015800072752 /* Syncpoint.h */,
+				27EB94CC14F7015800072752 /* Syncpoint.m */,
+				2799D1EB1505A8E200CB90E0 /* SyncpointAuth.h */,
+				2799D1EC1505A8E200CB90E0 /* SyncpointAuth.m */,
+				27EB94F914F7040100072752 /* Syncpoint-Info.plist */,
+				27EB954114F71AAC00072752 /* SyncpointPrefix.pch */,
+				27EB959214F87C9700072752 /* Demo-iOS */,
+				27EB94AA14F700AC00072752 /* Frameworks */,
+				27EB94A914F700AC00072752 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		27EB94A914F700AC00072752 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				27EB94A814F700AC00072752 /* Syncpoint.framework */,
+				27EB951314F70D4D00072752 /* libSyncpoint.a */,
+				27EB957B14F87C6800072752 /* Syncpoint Demo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		27EB94AA14F700AC00072752 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				27EB95C214F96AA000072752 /* libz.dylib */,
+				27EB95C014F966BB00072752 /* SystemConfiguration.framework */,
+				27EB95BE14F966B500072752 /* Security.framework */,
+				27EB95BC14F966A500072752 /* libsqlite3.dylib */,
+				27EB952014F70DDD00072752 /* libfacebook_ios_sdk.a */,
+				27EB951E14F70D8800072752 /* libCouchCocoa.a */,
+				27EB950D14F70CF300072752 /* libfacebook_ios_sdk.a */,
+				27EB94FE14F7044900072752 /* SystemConfiguration.framework */,
+				27EB94FC14F7044300072752 /* libz.dylib */,
+				27EB94FA14F7043C00072752 /* libsqlite3.dylib */,
+				27EB94F714F703A400072752 /* libCouchCocoa.a */,
+				27EB94B014F700AC00072752 /* Foundation.framework */,
+				27EB957D14F87C6800072752 /* UIKit.framework */,
+				27EB958014F87C6800072752 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		27EB959214F87C9700072752 /* Demo-iOS */ = {
+			isa = PBXGroup;
+			children = (
+				27EB959814F87C9700072752 /* DemoAppDelegate.h */,
+				27EB959914F87C9700072752 /* DemoAppDelegate.m */,
+				27EB95A514F87C9700072752 /* RootViewController.h */,
+				27EB95A614F87C9700072752 /* RootViewController.m */,
+				27EB95A714F87C9700072752 /* RootViewController.xib */,
+				27EB959314F87C9700072752 /* ConfigViewController.h */,
+				27EB959414F87C9700072752 /* ConfigViewController.m */,
+				27EB959514F87C9700072752 /* ConfigViewController.xib */,
+				27EB959614F87C9700072752 /* Demo-iOS-Info.plist */,
+				27EB959714F87C9700072752 /* Demo-iOS-Prefix.pch */,
+				27EB959A14F87C9700072752 /* EmptyAppDelegate.h */,
+				27EB959B14F87C9700072752 /* EmptyAppDelegate.m */,
+				27EB959C14F87C9700072752 /* InfoPlist.strings */,
+				27EB959E14F87C9700072752 /* Entitlements.plist */,
+				27EB95A114F87C9700072752 /* list_area___checkbox___checked.png */,
+				27EB95A214F87C9700072752 /* list_area___checkbox___unchecked.png */,
+				27EB95A314F87C9700072752 /* main.m */,
+				27EB95A414F87C9700072752 /* MainWindow.xib */,
+				27EB95B614F87CDB00072752 /* Syncpoint Demo-Info.plist */,
+			);
+			path = "Demo-iOS";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		27EB94A514F700AC00072752 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27EB94CD14F7015800072752 /* Syncpoint.h in Headers */,
+				2799D1ED1505A8E200CB90E0 /* SyncpointAuth.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27EB951114F70D4D00072752 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2799D1EE1505A8E200CB90E0 /* SyncpointAuth.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		27EB94A714F700AC00072752 /* Syncpoint Mac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 27EB94BD14F700AC00072752 /* Build configuration list for PBXNativeTarget "Syncpoint Mac" */;
+			buildPhases = (
+				27EB94A314F700AC00072752 /* Sources */,
+				27EB94A414F700AC00072752 /* Frameworks */,
+				27EB94A514F700AC00072752 /* Headers */,
+				27EB94A614F700AC00072752 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Syncpoint Mac";
+			productName = Syncpoint;
+			productReference = 27EB94A814F700AC00072752 /* Syncpoint.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		27EB951214F70D4D00072752 /* Syncpoint iOS library */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 27EB951B14F70D4D00072752 /* Build configuration list for PBXNativeTarget "Syncpoint iOS library" */;
+			buildPhases = (
+				27EB950F14F70D4D00072752 /* Sources */,
+				27EB951014F70D4D00072752 /* Frameworks */,
+				27EB951114F70D4D00072752 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Syncpoint iOS library";
+			productName = "Syncpoint iOS library";
+			productReference = 27EB951314F70D4D00072752 /* libSyncpoint.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		27EB957A14F87C6800072752 /* Syncpoint Demo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 27EB959014F87C6800072752 /* Build configuration list for PBXNativeTarget "Syncpoint Demo" */;
+			buildPhases = (
+				27EB957714F87C6800072752 /* Sources */,
+				27EB957814F87C6800072752 /* Frameworks */,
+				27EB957914F87C6800072752 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				27EB95B814F87CFE00072752 /* PBXTargetDependency */,
+			);
+			name = "Syncpoint Demo";
+			productName = "Syncpoint Demo";
+			productReference = 27EB957B14F87C6800072752 /* Syncpoint Demo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		27EB949E14F700AC00072752 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+				ORGANIZATIONNAME = "Couchbase, Inc.";
+			};
+			buildConfigurationList = 27EB94A114F700AC00072752 /* Build configuration list for PBXProject "Syncpoint" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 27EB949C14F700AC00072752;
+			productRefGroup = 27EB94A914F700AC00072752 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				27EB94A714F700AC00072752 /* Syncpoint Mac */,
+				27EB951214F70D4D00072752 /* Syncpoint iOS library */,
+				27EB957A14F87C6800072752 /* Syncpoint Demo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		27EB94A614F700AC00072752 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27EB957914F87C6800072752 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27EB95A914F87C9700072752 /* ConfigViewController.xib in Resources */,
+				27EB95AA14F87C9700072752 /* Demo-iOS-Info.plist in Resources */,
+				27EB95AD14F87C9700072752 /* InfoPlist.strings in Resources */,
+				27EB95AE14F87C9700072752 /* Entitlements.plist in Resources */,
+				27EB95B014F87C9700072752 /* list_area___checkbox___checked.png in Resources */,
+				27EB95B114F87C9700072752 /* list_area___checkbox___unchecked.png in Resources */,
+				27EB95B314F87C9700072752 /* MainWindow.xib in Resources */,
+				27EB95B514F87C9700072752 /* RootViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		27EB94A314F700AC00072752 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27EB94CE14F7015800072752 /* Syncpoint.m in Sources */,
+				2799D1EF1505A8E200CB90E0 /* SyncpointAuth.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27EB950F14F70D4D00072752 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27EB952214F7107B00072752 /* Syncpoint.m in Sources */,
+				2799D1F01505A8E200CB90E0 /* SyncpointAuth.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27EB957714F87C6800072752 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27EB95A814F87C9700072752 /* ConfigViewController.m in Sources */,
+				27EB95AB14F87C9700072752 /* DemoAppDelegate.m in Sources */,
+				27EB95B214F87C9700072752 /* main.m in Sources */,
+				27EB95B414F87C9700072752 /* RootViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		27EB95B814F87CFE00072752 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 27EB951214F70D4D00072752 /* Syncpoint iOS library */;
+			targetProxy = 27EB95B714F87CFE00072752 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		27EB959C14F87C9700072752 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				27EB959D14F87C9700072752 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		27EB94BB14F700AC00072752 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(CONFIGURATION_BUILD_DIR)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = SyncpointPrefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					../TouchDB/Source,
+					../TouchDB/vendor/MYUtilities,
+					"../vendor/facebook-ios-sdk/src",
+					"$(CONFIGURATION_BUILD_DIR)",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				WARNING_CFLAGS = "-Wall";
+			};
+			name = Debug;
+		};
+		27EB94BC14F700AC00072752 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = "$(CONFIGURATION_BUILD_DIR)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = SyncpointPrefix.pch;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					../TouchDB/Source,
+					../TouchDB/vendor/MYUtilities,
+					"../vendor/facebook-ios-sdk/src",
+					"$(CONFIGURATION_BUILD_DIR)",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+				WARNING_CFLAGS = "-Wall";
+			};
+			name = Release;
+		};
+		27EB94BE14F700AC00072752 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				INFOPLIST_FILE = "Syncpoint-Info.plist";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = Syncpoint;
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Debug;
+		};
+		27EB94BF14F700AC00072752 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				INFOPLIST_FILE = "Syncpoint-Info.plist";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = Syncpoint;
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Release;
+		};
+		27EB951C14F70D4D00072752 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				DEAD_CODE_STRIPPING = NO;
+				DSTROOT = /tmp/Syncpoint_iOS_library.dst;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../build/Syncpoint/Build/Products/Debug\"",
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = Syncpoint;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		27EB951D14F70D4D00072752 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				DEAD_CODE_STRIPPING = NO;
+				DSTROOT = /tmp/Syncpoint_iOS_library.dst;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../build/Syncpoint/Build/Products/Debug\"",
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = Syncpoint;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		27EB958E14F87C6800072752 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				INFOPLIST_FILE = "Demo-iOS/Syncpoint Demo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		27EB958F14F87C6800072752 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				INFOPLIST_FILE = "Demo-iOS/Syncpoint Demo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		27EB94A114F700AC00072752 /* Build configuration list for PBXProject "Syncpoint" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27EB94BB14F700AC00072752 /* Debug */,
+				27EB94BC14F700AC00072752 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		27EB94BD14F700AC00072752 /* Build configuration list for PBXNativeTarget "Syncpoint Mac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27EB94BE14F700AC00072752 /* Debug */,
+				27EB94BF14F700AC00072752 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		27EB951B14F70D4D00072752 /* Build configuration list for PBXNativeTarget "Syncpoint iOS library" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27EB951C14F70D4D00072752 /* Debug */,
+				27EB951D14F70D4D00072752 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		27EB959014F87C6800072752 /* Build configuration list for PBXNativeTarget "Syncpoint Demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27EB958E14F87C6800072752 /* Debug */,
+				27EB958F14F87C6800072752 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 27EB949E14F700AC00072752 /* Project object */;
+}

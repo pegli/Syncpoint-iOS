@@ -1,0 +1,12 @@
+//
+//  SyncpointPrefix.pch
+//  Syncpoint
+//
+//  Created by Jens Alfke on 2/23/12.
+//  Copyright (c) 2012 Couchbase, Inc. All rights reserved.
+//
+
+#import <CouchCocoa/CouchCocoa.h>
+#import "CollectionUtils.h"
+#import "Logging.h"
+#import "Test.h"
