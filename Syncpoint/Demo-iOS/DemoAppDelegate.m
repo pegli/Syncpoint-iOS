@@ -60,13 +60,14 @@
     [SyncpointFacebookAuth setFacebookAppID: @"251541441584833"];
     self.syncpoint = [[Syncpoint alloc] initWithLocalServer: server
                                                remoteServer: remote
-                                              authenticator: [SyncpointFacebookAuth new]];
-    syncpoint.appDatabaseName = @"grocery-sync";
-    if (![self.syncpoint start]) {
-        NSLog(@"Syncpoint failed to start: %@", syncpoint.error);
+                                              authenticator: [SyncpointFacebookAuth new]
+                                                      error: &error];
+    if (!syncpoint) {
+        NSLog(@"Syncpoint failed to start: %@", error);
         exit(1);
     }
-    [self.syncpoint initiatePairing];
+    syncpoint.appDatabaseName = @"grocery-sync";
+    [syncpoint initiatePairing];
 
     return YES;
 }

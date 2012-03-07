@@ -14,15 +14,6 @@
 @implementation SyncpointAuth
 
 
-- (id) initWithSyncpoint: (Syncpoint*)syncpoint {
-    self = [super init];
-    if (self) {
-        _syncpoint = syncpoint;
-    }
-    return self;
-}
-
-
 @synthesize syncpoint=_syncpoint;
 
 

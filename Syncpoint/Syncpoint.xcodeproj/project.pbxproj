@@ -63,6 +63,7 @@
 		2799D1EC1505A8E200CB90E0 /* SyncpointAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyncpointAuth.m; sourceTree = "<group>"; };
 		2799D1F51505B36600CB90E0 /* SyncpointFacebookAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyncpointFacebookAuth.h; sourceTree = "<group>"; };
 		2799D1F61505B36600CB90E0 /* SyncpointFacebookAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyncpointFacebookAuth.m; sourceTree = "<group>"; };
+		2799D2061506F7AD00CB90E0 /* Schema.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = Schema.md; sourceTree = "<group>"; };
 		27EB94A814F700AC00072752 /* Syncpoint.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Syncpoint.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		27EB94B014F700AC00072752 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		27EB94CB14F7015800072752 /* Syncpoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Syncpoint.h; sourceTree = "<group>"; };
@@ -157,6 +158,7 @@
 				2799D1F61505B36600CB90E0 /* SyncpointFacebookAuth.m */,
 				27EB94F914F7040100072752 /* Syncpoint-Info.plist */,
 				27EB954114F71AAC00072752 /* SyncpointPrefix.pch */,
+				2799D2061506F7AD00CB90E0 /* Schema.md */,
 				27EB959214F87C9700072752 /* Demo-iOS */,
 				27EB94AA14F700AC00072752 /* Frameworks */,
 				27EB94A914F700AC00072752 /* Products */,

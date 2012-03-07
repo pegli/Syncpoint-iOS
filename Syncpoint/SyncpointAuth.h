@@ -18,9 +18,7 @@
     Syncpoint* _syncpoint;
 }
 
-- (id) initWithSyncpoint: (Syncpoint*)syncpoint;
-
-@property (readonly) Syncpoint* syncpoint;
+@property (readwrite) Syncpoint* syncpoint;
 
 /** The "type" property value to use for session auth documents created by this instance. */
 @property (readonly) NSString* authDocType;

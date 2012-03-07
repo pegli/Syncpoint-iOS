@@ -43,6 +43,8 @@ static NSString* sFacebookAppID;
         NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
         NSString* accessToken = [defaults objectForKey:@"Syncpoint_FBAccessToken"];
         NSDate* expirationDate = [defaults objectForKey:@"Syncpoint_FBExpirationDate"];
+        LogTo(Syncpoint, @"Created Facebook instance %@; token=%@, expiration=%@",
+              _facebook, accessToken, expirationDate);
         if (accessToken && expirationDate) {
             _facebook.accessToken = accessToken;
             _facebook.expirationDate = expirationDate;
@@ -53,13 +55,19 @@ static NSString* sFacebookAppID;
 
 
 - (void) initiatePairing {
-    if (!self.facebook.isSessionValid)
-        [self.facebook authorize:nil];
+    Assert(self.syncpoint);
+    if (self.facebook.isSessionValid)
+        [self.syncpoint authenticatedWithToken: _facebook.accessToken ofType: @"fb_access_token"];
+    else {
+        LogTo(Syncpoint, @"Authorizing with Facebook...");
+        [_facebook authorize:nil];
+    }
 }
 
 - (void) removePairing {
     //    todo: delete the session document
     //    [sessionDocument delete]
+    [self forgetToken];
     [self.facebook logout];
 }
 
@@ -69,19 +77,32 @@ static NSString* sFacebookAppID;
 }
 
 
+- (void) setToken: (NSString*)accessToken expirationDate: (NSDate*)expirationDate {
+    LogTo(Syncpoint, @"Facebook logged in: token=%@, expiration=%@", accessToken, expirationDate);
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject: accessToken forKey: @"Syncpoint_FBAccessToken"];
+    [defaults setObject: expirationDate forKey: @"Syncpoint_FBExpirationDate"];
+    [defaults synchronize];
+    [self.syncpoint authenticatedWithToken: accessToken ofType: @"fb_access_token"];
+}
+
+- (void) forgetToken {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults removeObjectForKey: @"Syncpoint_FBAccessToken"];
+    [defaults removeObjectForKey: @"Syncpoint_FBExpirationDate"];
+}
+
+
 #pragma mark - FACEBOOK DELEGATE API:
 
 
 - (void) fbDidLogin {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject: _facebook.accessToken forKey: @"Syncpoint_FBAccessToken"];
-    [defaults setObject: _facebook.expirationDate forKey: @"Syncpoint_FBExpirationDate"];
-    [defaults synchronize];
-    [self.syncpoint authenticatedWithToken: _facebook.accessToken ofType: @"fb_access_token"];
+    [self setToken: _facebook.accessToken expirationDate: _facebook.expirationDate];
 }
 
 // Called when the user canceled the authorization dialog.
 -(void) fbDidNotLogin: (BOOL)cancelled {
+    LogTo(Syncpoint, @"Facebook did not login; cancelled=%d", cancelled);
     [self.syncpoint authenticationFailed];
 }
 
@@ -89,15 +110,15 @@ static NSString* sFacebookAppID;
 - (void) fbDidExtendToken: (NSString*)accessToken
                 expiresAt: (NSDate*)expiresAt
 {
-    // TODO: IMPLEMENT
+    [self setToken: accessToken expirationDate: expiresAt];
 }
 
 - (void) fbDidLogout {
-    // TODO: IMPLEMENT
+    [self forgetToken];
 }
 
 - (void) fbSessionInvalidated {
-    // TODO: IMPLEMENT
+    [self forgetToken];
 }
 
 

@@ -18,24 +18,20 @@
     NSURL* _remote;
     CouchServer* _server;
     CouchDatabase* _sessionDatabase;
-    NSString* _appDatabaseName;
+    CouchDocument *_sessionDoc;
     CouchReplication *_sessionPull;
     CouchReplication *_sessionPush;
     BOOL _observingSessionPull;
-    CouchDocument *_sessionDoc;
-    NSError* _error;
     BOOL _sessionSynced;
+    NSString* _appDatabaseName;
 }
 
 - (id) initWithLocalServer: (CouchServer*)localServer
               remoteServer: (NSURL*)remoteServerURL
-             authenticator: (SyncpointAuth*)authenticator;
+             authenticator: (SyncpointAuth*)authenticator
+                     error: (NSError**)outError;
 
 @property NSString* appDatabaseName;
-
-@property (readonly) NSError* error;
-
-- (BOOL) start;
 
 - (void) initiatePairing;
 
