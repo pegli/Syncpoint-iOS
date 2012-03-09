@@ -20,18 +20,25 @@
 
 @property (readwrite) Syncpoint* syncpoint;
 
-/** The "type" property value to use for session auth documents created by this instance. */
+/** The "type" property value to use for session auth documents created by this instance.
+    Abstract method: Subclasses must override it. */
 @property (readonly) NSString* authDocType;
 
 /** Should begin the pairing/authentication process with the service.
-    This process is asynchronous; the authenticator must eventually reply to its Syncpoint instance with either an -authenticatedWithToken:ofType: message or an -authenticateionFailed message. */
+    This process is asynchronous; the authenticator must eventually reply to its Syncpoint instance with either an -authenticatedWithToken:ofType: message or an -authenticateionFailed message.
+    Abstract method: Subclasses must override it.  */
 - (void) initiatePairing;
 
-/** Should forget any locally-stored authentication state (tokens/cookies). */
+/** If the authenticator has a stored token that's still valid, it should pass it to the Syncpoing instance by calling -authenticatedWithToken:ofType: and return YES. */
+- (BOOL) validateToken;
+
+/** Should forget any locally-stored authentication state (tokens/cookies).
+    Default implementation does nothing. */
 - (void) removePairing;
 
 /** Called when the OS asks the application to open a URL.
     Many forms of authentication have the service reply to the app by redirecting Safari to a custom URL; this method allows for this.
+    Default implementation just returns NO.
     @return  YES if the authenticator handled the URL, NO if it didn't. */
 - (BOOL) handleOpenURL: (NSURL*)url;
 

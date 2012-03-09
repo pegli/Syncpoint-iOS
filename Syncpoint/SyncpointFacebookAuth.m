@@ -55,14 +55,21 @@ static NSString* sFacebookAppID;
 
 
 - (void) initiatePairing {
-    Assert(self.syncpoint);
-    if (self.facebook.isSessionValid)
-        [self.syncpoint authenticatedWithToken: _facebook.accessToken ofType: @"fb_access_token"];
-    else {
+    if (![self validateToken]) {
         LogTo(Syncpoint, @"Authorizing with Facebook...");
         [_facebook authorize:nil];
     }
 }
+
+
+- (BOOL) validateToken {
+    Assert(self.syncpoint);
+    if (!self.facebook.isSessionValid)
+        return NO;
+    [self.syncpoint authenticatedWithToken: _facebook.accessToken ofType: @"fb_access_token"];
+    return YES;
+}
+
 
 - (void) removePairing {
     //    todo: delete the session document

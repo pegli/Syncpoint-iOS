@@ -10,6 +10,7 @@
 @class Facebook;
 
 
+/** Facebook authentication mechanism for Syncpoint clients. */
 @interface SyncpointFacebookAuth : SyncpointAuth
 {
     @private

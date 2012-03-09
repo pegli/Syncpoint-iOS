@@ -27,6 +27,11 @@
 }
 
 
+- (BOOL) validateToken {
+    AssertAbstractMethod();
+}
+
+
 - (void) removePairing {
 }
 

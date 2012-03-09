@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		278495F0150AC44100A41C44 /* libCouchCocoa.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 278495EF150AC44100A41C44 /* libCouchCocoa.a */; };
 		2799D1ED1505A8E200CB90E0 /* SyncpointAuth.h in Headers */ = {isa = PBXBuildFile; fileRef = 2799D1EB1505A8E200CB90E0 /* SyncpointAuth.h */; };
 		2799D1EE1505A8E200CB90E0 /* SyncpointAuth.h in Headers */ = {isa = PBXBuildFile; fileRef = 2799D1EB1505A8E200CB90E0 /* SyncpointAuth.h */; };
 		2799D1EF1505A8E200CB90E0 /* SyncpointAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = 2799D1EC1505A8E200CB90E0 /* SyncpointAuth.m */; };
@@ -15,6 +16,10 @@
 		2799D1F81505B36600CB90E0 /* SyncpointFacebookAuth.h in Headers */ = {isa = PBXBuildFile; fileRef = 2799D1F51505B36600CB90E0 /* SyncpointFacebookAuth.h */; };
 		2799D1F91505B36600CB90E0 /* SyncpointFacebookAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = 2799D1F61505B36600CB90E0 /* SyncpointFacebookAuth.m */; };
 		2799D1FA1505B36600CB90E0 /* SyncpointFacebookAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = 2799D1F61505B36600CB90E0 /* SyncpointFacebookAuth.m */; };
+		2799D2091507D74C00CB90E0 /* SyncpointModels.h in Headers */ = {isa = PBXBuildFile; fileRef = 2799D2071507D74B00CB90E0 /* SyncpointModels.h */; };
+		2799D20A1507D74C00CB90E0 /* SyncpointModels.h in Headers */ = {isa = PBXBuildFile; fileRef = 2799D2071507D74B00CB90E0 /* SyncpointModels.h */; };
+		2799D20B1507D74C00CB90E0 /* SyncpointModels.m in Sources */ = {isa = PBXBuildFile; fileRef = 2799D2081507D74B00CB90E0 /* SyncpointModels.m */; };
+		2799D20C1507D74C00CB90E0 /* SyncpointModels.m in Sources */ = {isa = PBXBuildFile; fileRef = 2799D2081507D74B00CB90E0 /* SyncpointModels.m */; };
 		27EB94CD14F7015800072752 /* Syncpoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 27EB94CB14F7015800072752 /* Syncpoint.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		27EB94CE14F7015800072752 /* Syncpoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EB94CC14F7015800072752 /* Syncpoint.m */; };
 		27EB94CF14F701EF00072752 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB94B014F700AC00072752 /* Foundation.framework */; };
@@ -23,7 +28,6 @@
 		27EB94FD14F7044300072752 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB94FC14F7044300072752 /* libz.dylib */; };
 		27EB94FF14F7044900072752 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB94FE14F7044900072752 /* SystemConfiguration.framework */; };
 		27EB951414F70D4D00072752 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB94B014F700AC00072752 /* Foundation.framework */; };
-		27EB951F14F70D8800072752 /* libCouchCocoa.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB951E14F70D8800072752 /* libCouchCocoa.a */; };
 		27EB952114F70DDD00072752 /* libfacebook_ios_sdk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB952014F70DDD00072752 /* libfacebook_ios_sdk.a */; };
 		27EB952214F7107B00072752 /* Syncpoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EB94CC14F7015800072752 /* Syncpoint.m */; };
 		27EB957E14F87C6800072752 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB957D14F87C6800072752 /* UIKit.framework */; };
@@ -59,11 +63,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		278495EF150AC44100A41C44 /* libCouchCocoa.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCouchCocoa.a; path = "../build/Syncpoint/Build/Products/Debug-iphonesimulator/libCouchCocoa.a"; sourceTree = "<group>"; };
 		2799D1EB1505A8E200CB90E0 /* SyncpointAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyncpointAuth.h; sourceTree = "<group>"; };
 		2799D1EC1505A8E200CB90E0 /* SyncpointAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyncpointAuth.m; sourceTree = "<group>"; };
 		2799D1F51505B36600CB90E0 /* SyncpointFacebookAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyncpointFacebookAuth.h; sourceTree = "<group>"; };
 		2799D1F61505B36600CB90E0 /* SyncpointFacebookAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyncpointFacebookAuth.m; sourceTree = "<group>"; };
 		2799D2061506F7AD00CB90E0 /* Schema.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = Schema.md; sourceTree = "<group>"; };
+		2799D2071507D74B00CB90E0 /* SyncpointModels.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyncpointModels.h; sourceTree = "<group>"; };
+		2799D2081507D74B00CB90E0 /* SyncpointModels.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyncpointModels.m; sourceTree = "<group>"; };
 		27EB94A814F700AC00072752 /* Syncpoint.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Syncpoint.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		27EB94B014F700AC00072752 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		27EB94CB14F7015800072752 /* Syncpoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Syncpoint.h; sourceTree = "<group>"; };
@@ -124,7 +131,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				27EB952114F70DDD00072752 /* libfacebook_ios_sdk.a in Frameworks */,
-				27EB951F14F70D8800072752 /* libCouchCocoa.a in Frameworks */,
+				278495F0150AC44100A41C44 /* libCouchCocoa.a in Frameworks */,
 				27EB951414F70D4D00072752 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -150,8 +157,11 @@
 		27EB949C14F700AC00072752 = {
 			isa = PBXGroup;
 			children = (
+				278495EF150AC44100A41C44 /* libCouchCocoa.a */,
 				27EB94CB14F7015800072752 /* Syncpoint.h */,
 				27EB94CC14F7015800072752 /* Syncpoint.m */,
+				2799D2071507D74B00CB90E0 /* SyncpointModels.h */,
+				2799D2081507D74B00CB90E0 /* SyncpointModels.m */,
 				2799D1EB1505A8E200CB90E0 /* SyncpointAuth.h */,
 				2799D1EC1505A8E200CB90E0 /* SyncpointAuth.m */,
 				2799D1F51505B36600CB90E0 /* SyncpointFacebookAuth.h */,
@@ -232,6 +242,7 @@
 				27EB94CD14F7015800072752 /* Syncpoint.h in Headers */,
 				2799D1ED1505A8E200CB90E0 /* SyncpointAuth.h in Headers */,
 				2799D1F71505B36600CB90E0 /* SyncpointFacebookAuth.h in Headers */,
+				2799D2091507D74C00CB90E0 /* SyncpointModels.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -241,6 +252,7 @@
 			files = (
 				2799D1EE1505A8E200CB90E0 /* SyncpointAuth.h in Headers */,
 				2799D1F81505B36600CB90E0 /* SyncpointFacebookAuth.h in Headers */,
+				2799D20A1507D74C00CB90E0 /* SyncpointModels.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -361,6 +373,7 @@
 				27EB94CE14F7015800072752 /* Syncpoint.m in Sources */,
 				2799D1EF1505A8E200CB90E0 /* SyncpointAuth.m in Sources */,
 				2799D1F91505B36600CB90E0 /* SyncpointFacebookAuth.m in Sources */,
+				2799D20B1507D74C00CB90E0 /* SyncpointModels.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -371,6 +384,7 @@
 				27EB952214F7107B00072752 /* Syncpoint.m in Sources */,
 				2799D1F01505A8E200CB90E0 /* SyncpointAuth.m in Sources */,
 				2799D1FA1505B36600CB90E0 /* SyncpointFacebookAuth.m in Sources */,
+				2799D20C1507D74C00CB90E0 /* SyncpointModels.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -514,6 +528,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../build/Syncpoint/Build/Products/Debug\"",
+					"\"$(SRCROOT)/../build/Syncpoint/Build/Products/Debug-iphonesimulator\"",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = Syncpoint;
@@ -532,6 +547,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../build/Syncpoint/Build/Products/Debug\"",
+					"\"$(SRCROOT)/../build/Syncpoint/Build/Products/Debug-iphonesimulator\"",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = Syncpoint;
