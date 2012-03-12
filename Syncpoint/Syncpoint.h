@@ -7,54 +7,41 @@
 //
 
 #import <Foundation/Foundation.h>
-@class SyncpointAuth, CouchServer, CouchReplication, CouchDocument, SyncpointSession;
+@class SyncpointAuthenticator, CouchServer, SyncpointSession, SyncpointInstallation;
 
 
 typedef enum {
-    kSyncpointUnauthenticated,
-    kSyncpointAuthenticating,
-    kSyncpointActivating,
-    kSyncpointUpdatingSession,
-    kSyncpointReady
+    kSyncpointUnauthenticated,  /**< No session, and no auth token to pair with */
+    kSyncpointAuthenticating,   /**< Authenticating user credentials (e.g. by OAuth) */
+    kSyncpointActivating,       /**< Got auth token, now setting up with the server */
+    kSyncpointUpdatingSession,  /**< Syncing session changes with the server */
+    kSyncpointReady             /**< In sync with the server, ready to go */
 } SyncpointState;
 
 
 /** Syncpoint client-side controller: pairs with the server and tracks channels and subscriptions. */
 @interface Syncpoint : NSObject
-{
-    @private
-    SyncpointAuth* _authenticator;
-    NSURL* _remote;
-    CouchServer* _server;
-    CouchDatabase* _sessionDatabase;
-    SyncpointSession* _session;
-    CouchReplication *_sessionPull;
-    CouchReplication *_sessionPush;
-    BOOL _observingSessionPull;
-    NSString* _appDatabaseName;
-    SyncpointState _state;
-    
-}
 
 /** Initializes a Syncpoint instance.
     @param localServer  The application's local server object.
     @param remoteServer  The URL of the remote Syncpoint-enabled server.
-    @param authenticator  An object that manages user authentication.
-    @param error  If this method returns nil, this parameter will be filled in with an error. */
+    @param error  If initialization fails, this parameter will be filled in with an error.
+    @return  The Syncpoint instance, or nil on failure. */
 - (id) initWithLocalServer: (CouchServer*)localServer
               remoteServer: (NSURL*)remoteServerURL
-             authenticator: (SyncpointAuth*)authenticator
-                     error: (NSError**)outError;
+                     error: (NSError**)error;
 
-/** Current state (see SyncpointState enum above). */
+@property (readonly, nonatomic) CouchServer* localServer;
+
+/** Current state (see SyncpointState enum above). Observable. */
 @property (readonly, nonatomic) SyncpointState state;
 
-/** The name of the database the app wants to use for its data.
-    TEMPORARY! Will be replaced by a more flexible API in the future, allowing for multiple databases. */
-@property NSString* appDatabaseName;
-
 /** Begins the process of authentication and provisioning an app database. */
-- (void) initiatePairing;
+- (void) authenticate: (SyncpointAuthenticator*)authenticator;
+
+
+/** The session object, which manages channels and subscriptions. */
+@property (readonly) SyncpointSession* session;
 
 /** Call this from your app delegate's -application:handleOpenURL: method.
     @return  YES if Syncpoint's authenticator handled the URL, else NO. */
@@ -63,8 +50,10 @@ typedef enum {
 
 
 /** Should be called only by the authenticator. */
-- (void) authenticatedWithToken: (id)accessToken
-                         ofType: (NSString*)tokenType;
-- (void) authenticationFailed;
+- (void) authenticator: (SyncpointAuthenticator*)authenticator
+authenticatedWithToken: (id)accessToken
+                ofType: (NSString*)tokenType;
+- (void) authenticator: (SyncpointAuthenticator*)authenticator
+       failedWithError: (NSError*)error;
 
 @end

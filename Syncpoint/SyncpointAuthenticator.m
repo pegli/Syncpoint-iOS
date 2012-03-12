@@ -6,12 +6,12 @@
 //  Copyright (c) 2012 Couchbase, Inc. All rights reserved.
 //
 
-#import "SyncpointAuth.h"
+#import "SyncpointAuthenticator.h"
 #import "Syncpoint.h"
 #import "TDMisc.h"
 
 
-@implementation SyncpointAuth
+@implementation SyncpointAuthenticator
 
 
 @synthesize syncpoint=_syncpoint;

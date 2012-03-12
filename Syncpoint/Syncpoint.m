@@ -7,8 +7,9 @@
 //
 
 #import "Syncpoint.h"
-#import "SyncpointAuth.h"
+#import "SyncpointAuthenticator.h"
 #import "SyncpointModels.h"
+#import "SyncpointInternal.h"
 #import <CouchCocoa/CouchCocoa.h>
 #import "TDMisc.h"
 
@@ -22,25 +23,33 @@
 
 
 @implementation Syncpoint
+{
+    @private
+    NSURL* _remote;
+    CouchServer* _server;
+    CouchDatabase* _sessionDatabase;
+    SyncpointSession* _session;
+    CouchReplication *_sessionPull;
+    CouchReplication *_sessionPush;
+    SyncpointAuthenticator* _authenticator;
+    BOOL _observingSessionPull;
+    SyncpointState _state;
+}
 
 
-@synthesize state=_state, appDatabaseName=_appDatabaseName;
+@synthesize localServer=_server, state=_state, session=_session;
 
 
 - (id) initWithLocalServer: (CouchServer*)localServer
               remoteServer: (NSURL*)remoteServerURL
-             authenticator: (SyncpointAuth*)authenticator
                      error: (NSError**)outError
 {
     CAssert(localServer);
     CAssert(remoteServerURL);
-    CAssert(authenticator);
     self = [super init];
     if (self) {
         _server = localServer;
         _remote = remoteServerURL;
-        _authenticator = authenticator;
-        _authenticator.syncpoint = self;
         
         // Create the session database on the first run of the app.
         _sessionDatabase = [_server databaseNamed: kSessionDatabaseName];
@@ -59,9 +68,8 @@
                 [self activateSession];
             }
         } else {
+            LogTo(Syncpoint, @"No session -- authentication needed");
             _state = kSyncpointUnauthenticated;
-            if (![_authenticator validateToken])
-                LogTo(Syncpoint, @"No session -- pairing needed");
         }
     }
     return self;
@@ -80,10 +88,12 @@
 }
 
 
-- (void) initiatePairing {
-    LogTo(Syncpoint, @"Authenticating using %@...", _authenticator);
+- (void) authenticate: (SyncpointAuthenticator*)authenticator {
+    LogTo(Syncpoint, @"Authenticating using %@...", authenticator);
     self.state = kSyncpointAuthenticating;
-    [_authenticator initiatePairing];
+    _authenticator = authenticator;
+    authenticator.syncpoint = self;
+    [authenticator initiatePairing];
 }
 
 
@@ -95,24 +105,34 @@
 #pragma mark - CALLBACKS FROM AUTHENTICATOR:
 
 
-- (void) authenticatedWithToken: (id)accessToken
-                         ofType: (NSString*)tokenType
+- (void) authenticator: (SyncpointAuthenticator*)authenticator
+authenticatedWithToken: (id)accessToken
+                ofType: (NSString*)tokenType
 {
-    if (_session.isActive)
-        return;     // TODO: Need to update token in session doc if it's changed
+    if (authenticator != _authenticator || _session.isActive)
+        return;
     
     LogTo(Syncpoint, @"Authenticated! %@=\"%@\"", tokenType, accessToken);
     _session = [SyncpointSession makeSessionInDatabase: _sessionDatabase
-                                              withType: _authenticator.authDocType
+                                              withType: authenticator.authDocType
                                              tokenType: tokenType
-                                                 token: accessToken];
+                                                 token: accessToken
+                                                 error: nil];   // TOD: Report error
+    _authenticator = nil;
     if (_session)
         [self activateSession];
+    else
+        self.state = kSyncpointUnauthenticated;
 }
 
 
-- (void) authenticationFailed {
+- (void) authenticator: (SyncpointAuthenticator*)authenticator
+       failedWithError: (NSError*)error
+{
+    if (authenticator != _authenticator || _session.isActive)
+        return;
     LogTo(Syncpoint, @"Authentication failed or canceled");
+    _authenticator = nil;
     self.state = kSyncpointUnauthenticated;
 }
 
@@ -226,7 +246,7 @@
     for (SyncpointSubscription* sub in _session.activeSubscriptions) {
         if (![installedSubscriptions containsObject: sub]) {
             LogTo(Syncpoint, @"Making installation db for %@", sub);
-            [sub makeInstallationWithLocalDatabase: nil];
+            [sub makeInstallationWithLocalDatabase: nil error: nil];    // TODO: Report error
         }
 
     }
@@ -234,17 +254,6 @@
     for (SyncpointInstallation* inst in _session.allInstallations)
         if (inst.channel.isReady)
             [self syncInstallation: inst];
-}
-
-
-- (SyncpointInstallation*) installChannelNamed: (NSString*)name
-                                    toDatabase: (CouchDatabase*)localDatabase
-{
-    LogTo(Syncpoint, @"Installing channel named '%@' for %@", name, localDatabase);
-    SyncpointInstallation* inst = [_session installChannelNamed: name toDatabase: localDatabase];
-    if (inst.channel.isReady)
-        [self syncInstallation: inst];
-    return inst;
 }
 
 

@@ -33,5 +33,5 @@ state           "created"
 local_db_name   Name of corresponding local database
 subscription_id ID of corresponding subscription document
 channel_id      ID of corresponding channel document
-session_id      ID of session document
+session_id      ID of session document; identifies the device that has subscribed.
 owner_id        User ID from session document

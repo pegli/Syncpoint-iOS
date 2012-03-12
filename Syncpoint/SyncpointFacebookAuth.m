@@ -11,7 +11,7 @@
 #import "Facebook.h"
 
 
-@interface SyncpointAuth () <FBSessionDelegate, FBRequestDelegate>
+@interface SyncpointAuthenticator () <FBSessionDelegate, FBRequestDelegate>
 @end
 
 
@@ -66,7 +66,9 @@ static NSString* sFacebookAppID;
     Assert(self.syncpoint);
     if (!self.facebook.isSessionValid)
         return NO;
-    [self.syncpoint authenticatedWithToken: _facebook.accessToken ofType: @"fb_access_token"];
+    [self.syncpoint authenticator: self
+           authenticatedWithToken: _facebook.accessToken
+                           ofType: @"fb_access_token"];
     return YES;
 }
 
@@ -90,7 +92,9 @@ static NSString* sFacebookAppID;
     [defaults setObject: accessToken forKey: @"Syncpoint_FBAccessToken"];
     [defaults setObject: expirationDate forKey: @"Syncpoint_FBExpirationDate"];
     [defaults synchronize];
-    [self.syncpoint authenticatedWithToken: accessToken ofType: @"fb_access_token"];
+    [self.syncpoint authenticator: self
+           authenticatedWithToken: accessToken
+                           ofType: @"fb_access_token"];
 }
 
 - (void) forgetToken {
@@ -107,10 +111,15 @@ static NSString* sFacebookAppID;
     [self setToken: _facebook.accessToken expirationDate: _facebook.expirationDate];
 }
 
-// Called when the user canceled the authorization dialog.
+
 -(void) fbDidNotLogin: (BOOL)cancelled {
     LogTo(Syncpoint, @"Facebook did not login; cancelled=%d", cancelled);
-    [self.syncpoint authenticationFailed];
+    NSError* error;
+    if (cancelled)
+        error = [NSError errorWithDomain: NSCocoaErrorDomain code: NSUserCancelledError userInfo:nil];
+    else
+        error = [NSError errorWithDomain: NSURLErrorDomain code: NSURLErrorUnknown userInfo:nil];
+    [self.syncpoint authenticator: self failedWithError: error];
 }
 
 

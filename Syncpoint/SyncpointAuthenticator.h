@@ -12,7 +12,7 @@
 
 /** Abstract base class for authentication/pairing services that work with Syncpoint.
     An instance is responsible for authenticating the user with some service and producing a token that can be sent to the Syncpoint server to identify and authenticate the user. */
-@interface SyncpointAuth : NSObject
+@interface SyncpointAuthenticator : NSObject
 {
     @private
     Syncpoint* _syncpoint;

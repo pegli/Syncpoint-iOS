@@ -6,12 +6,12 @@
 //  Copyright (c) 2012 Couchbase, Inc. All rights reserved.
 //
 
-#import "SyncpointAuth.h"
+#import "SyncpointAuthenticator.h"
 @class Facebook;
 
 
 /** Facebook authentication mechanism for Syncpoint clients. */
-@interface SyncpointFacebookAuth : SyncpointAuth
+@interface SyncpointFacebookAuth : SyncpointAuthenticator
 {
     @private
     Facebook *_facebook;

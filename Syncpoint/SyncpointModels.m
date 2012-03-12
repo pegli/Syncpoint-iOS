@@ -7,6 +7,7 @@
 //
 
 #import "SyncpointModels.h"
+#import "SyncpointInternal.h"
 #import <CouchCocoa/CouchModelFactory.h>
 #import "TDMisc.h"
 #import "CollectionUtils.h"
@@ -39,7 +40,7 @@ static NSEnumerator* modelsOfType(CouchDatabase* database, NSString* type) {
 
 
 
-@implementation SyncpointSessionItem
+@implementation SyncpointModel
 
 @dynamic state;
 
@@ -102,7 +103,9 @@ static NSEnumerator* modelsOfType(CouchDatabase* database, NSString* type) {
                                    withType: (NSString*)type
                                   tokenType: (NSString*)tokenType
                                       token: (NSString*)token
+                                      error: (NSError**)outError
 {
+    LogTo(Syncpoint, @"Creating session %@ in %@", type, database);
     SyncpointSession* session = [[self alloc] initWithNewDocumentInDatabase: database];
     [session setValue: type ofProperty: @"type"];
     [session setValue: token ofProperty: tokenType];
@@ -113,14 +116,15 @@ static NSEnumerator* modelsOfType(CouchDatabase* database, NSString* type) {
                                       {@"token", randomString()});
     session.oauth_creds = oauth_creds;
     
-    RESTOperation* op = [session save];
-    if (![op wait]) {
-        Warn(@"SyncpointSession: Couldn't save new session: %@", op.error);
+    if (![[session save] wait: outError]) {
+        Warn(@"SyncpointSession: Couldn't save new session");
         return nil;
     }
     
+    NSString* sessionID = session.document.documentID;
+    LogTo(Syncpoint, @"...session ID = %@", sessionID);
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject: session.document.documentID forKey: @"Syncpoint_SessionDocID"];
+    [defaults setObject: sessionID forKey: @"Syncpoint_SessionDocID"];
     [defaults synchronize];
     return session;
 }
@@ -131,17 +135,21 @@ static NSEnumerator* modelsOfType(CouchDatabase* database, NSString* type) {
 }
 
 
-- (SyncpointChannel*) makeChannelWithName: (NSString*)name {
+- (SyncpointChannel*) makeChannelWithName: (NSString*)name
+                                    error: (NSError**)outError
+{
+    LogTo(Syncpoint, @"Create channel named '%@'", name);
     SyncpointChannel* channel = [[SyncpointChannel alloc] initWithNewDocumentInDatabase: self.database];
     [channel setValue: @"channel" ofProperty: @"type"];
-    [channel setValue: self.user_id forKey: @"owner_id"];
+    [channel setValue: self.user_id ofProperty: @"owner_id"];
     channel.state = @"new";
     channel.name = name;
-    return channel;
+    return [[channel save] wait: outError] ? channel : nil;
 }
 
 
 - (SyncpointChannel*) channelWithName: (NSString*)name {
+    // TODO: Make this into a view query
     for (SyncpointChannel* channel in modelsOfType(self.database, @"channel"))
         if ([channel.name isEqualToString: name])
             return channel;
@@ -149,39 +157,20 @@ static NSEnumerator* modelsOfType(CouchDatabase* database, NSString* type) {
 }
 
 
-- (SyncpointInstallation*) installChannelNamed: (NSString*)name
+- (SyncpointInstallation*) installChannelNamed: (NSString*)channelName
                                     toDatabase: (CouchDatabase*)localDatabase
+                                         error: (NSError**)outError
 {
     Assert(self.isActive);
-    
-    SyncpointChannel* channel = [self channelWithName: name];
-    SyncpointSubscription* subscription = nil;
-    SyncpointInstallation* installation = nil;
-    if (channel) {
-        subscription = channel.subscription;
-        installation = channel.installation;
-    } else {
-        channel = [self makeChannelWithName: name];
-        if (!channel)
-            return nil;
-    }
-    
-    if (!subscription) {
-        if (installation)
-            Warn(@"already have an install doc %@ with no subscription for channel %@",
-                 installation, channel);
-        subscription = [channel makeSubscription];
-        if (!subscription)
-            return nil;
-    }
-    
-    if (!installation)
-        installation = [subscription makeInstallationWithLocalDatabase: localDatabase];
-    return installation;
+    SyncpointChannel* channel = [self channelWithName: channelName];
+    if (!channel)
+        channel = [self makeChannelWithName: channelName error: outError];
+    return [channel makeInstallationWithLocalDatabase: localDatabase error: outError];
 }
 
 
 - (NSEnumerator*) readyChannels {
+    // TODO: Make this into a view query
     return [modelsOfType(self.database, @"channel") my_map: ^(SyncpointChannel* channel) {
         return channel.isReady ? channel : nil;
     }];
@@ -189,6 +178,7 @@ static NSEnumerator* modelsOfType(CouchDatabase* database, NSString* type) {
 
 
 - (NSEnumerator*) activeSubscriptions {
+    // TODO: Make this into a view query
     return [modelsOfType(self.database, @"subscripton") my_map: ^(SyncpointSubscription* sub) {
         return sub.isActive ? sub : nil;
     }];
@@ -197,13 +187,14 @@ static NSEnumerator* modelsOfType(CouchDatabase* database, NSString* type) {
 
 - (NSSet*) installedSubscriptions {
     NSMutableSet* subscriptions = [NSMutableSet set];
-    for (SyncpointInstallation* inst in modelsOfType(self.database, @"installation"))
+    for (SyncpointInstallation* inst in self.allInstallations)
         [subscriptions addObject: inst.subscription];
     return subscriptions;
 }
 
 
 - (NSEnumerator*) allInstallations {
+    // TODO: Make this into a view query
     return [modelsOfType(self.database, @"installation") my_map: ^(SyncpointInstallation* inst) {
         return ([inst.state isEqual: @"created"] && inst.session == self) ? inst : nil;
     }];
@@ -217,37 +208,65 @@ static NSEnumerator* modelsOfType(CouchDatabase* database, NSString* type) {
 
 @implementation SyncpointChannel
 
-@dynamic name, cloud_database;
-
-- (bool) isDefault {
-    return [[self getValueOfProperty: @"default"] isEqual: $true];
-}
+@dynamic name, owner_id, cloud_database;
 
 - (bool) isReady {
     return [self.state isEqual: @"ready"];
 }
 
+
 - (SyncpointSubscription*) subscription {
+    // TODO: Make this into a view query
     for (SyncpointSubscription* sub in modelsOfType(self.database, @"subscription"))
         if (sub.channel == self)
             return sub;
     return nil;
 }
 
+
 - (SyncpointInstallation*) installation {
+    // TODO: Make this into a view query
     for (SyncpointInstallation* inst in modelsOfType(self.database, @"installation"))
-        if (inst.channel == self)
+        if (inst.channel == self && inst.isLocal)
             return inst;
     return nil;
 }
 
-- (SyncpointSubscription*) makeSubscription {
+
+- (SyncpointInstallation*) makeInstallationWithLocalDatabase: (CouchDatabase*)localDatabase
+                                                       error: (NSError**)outError
+
+{
+    SyncpointSubscription* subscription = self.subscription;
+    SyncpointInstallation* installation = self.installation;
+    if (!subscription) {
+        if (installation)
+            Warn(@"already have an install doc %@ with no subscription for channel %@",
+                 installation, self);
+        subscription = [self subscribe: outError];
+        if (!subscription)
+            return nil;
+    }
+    
+    if (!installation)
+        installation = [subscription makeInstallationWithLocalDatabase: localDatabase
+                                                                 error: outError];
+    return installation;
+}
+
+
+- (SyncpointSubscription*) subscribe: (NSError**)outError {
+    LogTo(Syncpoint, @"Subscribing to %@", self);
     SyncpointSubscription* sub = [[SyncpointSubscription alloc] initWithNewDocumentInDatabase: self.database];
     [sub setValue: @"subscription" ofProperty: @"type"];
     sub.state = @"active";
-    [sub setValue: [self getValueOfProperty: @"owner_id"] forKey: @"owner_id"];
+    [sub setValue: [self getValueOfProperty: @"owner_id"] ofProperty: @"owner_id"];
     sub.channel = self;
-    return sub;
+    return [[sub save] wait: outError] ? sub : nil;
+}
+
+- (void) unsubscribe {
+    // TODO
 }
 
 @end
@@ -259,7 +278,13 @@ static NSEnumerator* modelsOfType(CouchDatabase* database, NSString* type) {
 
 @dynamic channel;
 
-- (SyncpointInstallation*) makeInstallationWithLocalDatabase: (CouchDatabase*)localDB {
+- (SyncpointInstallation*) installation {
+    return self.channel.installation;
+}
+
+- (SyncpointInstallation*) makeInstallationWithLocalDatabase: (CouchDatabase*)localDB
+                                                       error: (NSError**)outError
+{
     NSString* name;
     if (localDB)
         name = localDB.relativePath;
@@ -268,6 +293,7 @@ static NSEnumerator* modelsOfType(CouchDatabase* database, NSString* type) {
         localDB = [self.database.server databaseNamed: name];
     }
     
+    LogTo(Syncpoint, @"Installing %@ to %@", self, localDB);
     if (![localDB ensureCreated: nil]) {
         Warn(@"SyncpointSubscription could not create channel db %@", name);
         return nil;
@@ -281,7 +307,7 @@ static NSEnumerator* modelsOfType(CouchDatabase* database, NSString* type) {
     inst.channel = self.channel;
     inst.subscription = self;
     [inst setValue: name forKey: @"local_db_name"];
-    return inst;
+    return [[inst save] wait: outError] ? inst : nil;
 }
 
 @end
@@ -294,8 +320,15 @@ static NSEnumerator* modelsOfType(CouchDatabase* database, NSString* type) {
 @dynamic subscription, channel, session;
 
 - (CouchDatabase*) localDatabase {
+    if (!self.isLocal)
+        return nil;
     NSString* name = $castIf(NSString, [self getValueOfProperty: @"local_db_name"]);
     return name ? [self.database.server databaseNamed: name] : nil;
+}
+
+- (bool) isLocal {
+    SyncpointSession* session = [SyncpointSession sessionInDatabase: self.database];
+    return [session.document.documentID isEqual: [self getValueOfProperty: @"session_id"]];
 }
 
 @end

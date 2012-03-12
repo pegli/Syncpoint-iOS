@@ -11,9 +11,9 @@
 
 
 /** Abstract base class for Syncpoint session-related model objects. */
-@interface SyncpointSessionItem : CouchModel
+@interface SyncpointModel : CouchModel
 
-@property NSString* state;
+/** Has this object been registered with the server? */
 @property (readonly) bool isActive;
 
 @end
@@ -21,36 +21,27 @@
 
 
 /** The singleton session-control document. */
-@interface SyncpointSession : SyncpointSessionItem
+@interface SyncpointSession : SyncpointModel
 
-/** Returns the existing SyncpointSession in the session database. */
-+ (SyncpointSession*) sessionInDatabase: (CouchDatabase*)database;
-
-/** Creates a new session document in the session database.
-    @param database  The local server's session database.
-    @param type  The value the documents "type" property should have.
-    @param tokenType  The property name of the document's auth token.
-    @param token  The value of the auth token.
-    @return  The new SyncpointSession instance. */
-+ (SyncpointSession*) makeSessionInDatabase: (CouchDatabase*)database
-                                   withType: (NSString*)type
-                                  tokenType: (NSString*)tokenType
-                                      token: (NSString*)token;
-
-@property NSDictionary* oauth_creds;
-
+/** The server-assigned ID of the local user. */
 @property (readonly) NSString* user_id;
 
-/** The name of the remote control database that the session database syncs with. */
-@property (readonly) NSString* controlDatabaseName;
-
+/** Returns the existing channel with the given name, or nil if it doesn't exist. */
 - (SyncpointChannel*) channelWithName: (NSString*)name;
 
-/** Creates a new channel document. */
-- (SyncpointChannel*) makeChannelWithName: (NSString*)name;
+/** Creates a new channel document.
+    Channel names are not unique; if there is already a channel with this name, a new one will be created. */
+- (SyncpointChannel*) makeChannelWithName: (NSString*)name
+                                    error: (NSError**)error;
 
-- (SyncpointInstallation*) installChannelNamed: (NSString*)name
-                                    toDatabase: (CouchDatabase*)localDatabase;
+/** Convenience method that creates a channel if none with that name exists, then creates a subscription to it, synchronizing it with a local database.
+    @param channelName  The channel name. If a channel with this name doesn't exist, it will be created.
+    @param localDatabase  The database on the local server to sync the channel database with. If it doesn't exist yet, it will be created. Or pass nil to have a new randomly-named database created.
+    @param error  On failure, will be filled in with an NSError describing the problem.
+    @return  On success, an object representing the installation. On failure, nil. */
+- (SyncpointInstallation*) installChannelNamed: (NSString*)channelName
+                                    toDatabase: (CouchDatabase*)localDatabase
+                                         error: (NSError**)error;
 
 /** Enumerates all channels of this session that are in the "ready" state. */
 @property (readonly) NSEnumerator* readyChannels;
@@ -68,39 +59,83 @@
 
 
 
-@interface SyncpointChannel : SyncpointSessionItem
+/** A channel represents a database available on the server that you could subscribe to. */
+@interface SyncpointChannel : SyncpointModel
 
-@property NSString* name;
-@property (readonly) bool isDefault;
+/** The channel's name. Not guaranteed to be unique. */
+@property (readonly) NSString* name;
+
+/** The ID of the user who created/owns this channel.
+    Not necessarily the same as the ID of the local user! */
+@property (readonly) NSString* owner_id;
+
+/** Is the channel set up on the server and ready for use? */
 @property (readonly) bool isReady;
-@property (readonly) NSString* cloud_database;
 
+/** The local user's subscription to the channel, if any. */
 @property (readonly) SyncpointSubscription* subscription;
+
+/** The local device's installation of the channel, if any. */
 @property (readonly) SyncpointInstallation* installation;
 
-- (SyncpointSubscription*) makeSubscription;
+/** Creates a subscription to this channel. */
+- (SyncpointSubscription*) subscribe: (NSError**)error;
+
+/** Removes the user's subscription to this channel. */
+- (void) unsubscribe;
+
+/** Creates a subscription and local installation of this channel, synced to the given database.
+    If a subscription already exists, it'll be reused without creating a duplicate.
+    If a local installation already exists, it'll be returned without creating a duplicate.
+    @param localDatabase  The local database to sync the channel with, or nil to create a new local database (with a randomly chosen name.)
+    @param error  On failure, will be filled in with an NSError.
+    @return  The new installation object, or nil on failure. */
+- (SyncpointInstallation*) makeInstallationWithLocalDatabase: (CouchDatabase*)localDatabase
+                                                       error: (NSError**)error;
 
 @end
 
 
 
-@interface SyncpointSubscription : SyncpointSessionItem
+/** A subscription represents a channel that your user account has subscribed to, on some device or devices (but not necessarily this one.)
+    If the local device is subscribed to a channel, there will also be a corresponding SyncpointInstallation. */
+@interface SyncpointSubscription : SyncpointModel
 
-@property SyncpointChannel* channel;
+/** The channel being subscribed to. */
+@property (readonly) SyncpointChannel* channel;
 
-/** Installs a channel, so it will sync with a local database.
-    @param localDB  A local database to sync the channel with, or nil to create one with a random name. */
-- (SyncpointInstallation*) makeInstallationWithLocalDatabase: (CouchDatabase*)localDatabase;
+/** The local installation of this subscription, if this device is subscribed. */
+@property (readonly) SyncpointInstallation* installation;
+
+/** Creates a local installation of this channel, synced to the given database.
+    This doesn't care whether a local installation already exists -- if so, you'll now have two,
+    which can be confusing (and duplicates bandwidth) and is probably not what you wanted.
+    @param localDB  A local database to sync the channel with, or nil to create one with a random name.
+    @param error  On failure, will be filled in with an NSError.
+    @return  The new installation object, or nil on failure. */
+- (SyncpointInstallation*) makeInstallationWithLocalDatabase: (CouchDatabase*)localDatabase
+                                                       error: (NSError**)error;
 
 @end
 
 
 
-@interface SyncpointInstallation : SyncpointSessionItem
+/** An installation represents a subscription to a channel on a specific device. */
+@interface SyncpointInstallation : SyncpointModel
 
+/** Is this installation specific to this device? */
+@property (readonly) bool isLocal;
+
+/** The local database to sync. */
 @property (readonly) CouchDatabase* localDatabase;
-@property SyncpointSubscription* subscription;
-@property SyncpointChannel* channel;
-@property SyncpointSession* session;
+
+/** The subscription this is associated with. */
+@property (readonly) SyncpointSubscription* subscription;
+
+/** The channel this is associated with. */
+@property (readonly) SyncpointChannel* channel;
+
+/** The session this is associated with. */
+@property (readonly) SyncpointSession* session;
 
 @end
