@@ -22,6 +22,10 @@
 #import "SyncpointFacebookAuth.h"
 
 
+#define kServerURLString @"http://single.couchbase.net/"
+//#define kServerURLString @"http://localhost:5984/"
+
+
 @implementation DemoAppDelegate
 
 
@@ -57,7 +61,7 @@
     [root useDatabase: database];
 
     // Start up Syncpoint client:
-    NSURL* remote = [NSURL URLWithString: @"http://single.couchbase.net/"];
+    NSURL* remote = [NSURL URLWithString: kServerURLString];
     [SyncpointFacebookAuth setFacebookAppID: @"251541441584833"];
     self.syncpoint = [[Syncpoint alloc] initWithLocalServer: server
                                                remoteServer: remote

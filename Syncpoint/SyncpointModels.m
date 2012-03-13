@@ -70,17 +70,7 @@ static NSEnumerator* modelsOfType(CouchDatabase* database, NSString* type) {
 
 @implementation SyncpointSession
 
-@dynamic user_id, oauth_creds;
-
-
-+ (void) initialize {
-    if (self == [SyncpointSession class]) {
-        CouchModelFactory* factory = [CouchModelFactory sharedInstance]; //TEMP: Should be per-database
-        [factory registerClass: @"SyncpointChannel" forDocumentType: @"channel"];
-        [factory registerClass: @"SyncpointSubscription" forDocumentType: @"subscription"];
-        [factory registerClass: @"SyncpointInstallation" forDocumentType: @"installation"];
-    }
-}
+@dynamic user_id, oauth_creds, control_database;
 
 
 + (SyncpointSession*) sessionInDatabase: (CouchDatabase *)database {
@@ -130,8 +120,16 @@ static NSEnumerator* modelsOfType(CouchDatabase* database, NSString* type) {
 }
 
 
-- (NSString*) controlDatabaseName {
-    return [[self getValueOfProperty: @"session"] objectForKey: @"control_database"];
+- (id) initWithDocument: (CouchDocument*)document {
+    self = [super initWithDocument: document];
+    if (self) {
+        // Register the other model classes with the database's model factory:
+        CouchModelFactory* factory = self.database.modelFactory;
+        [factory registerClass: @"SyncpointChannel" forDocumentType: @"channel"];
+        [factory registerClass: @"SyncpointSubscription" forDocumentType: @"subscription"];
+        [factory registerClass: @"SyncpointInstallation" forDocumentType: @"installation"];
+    }
+    return self;
 }
 
 
@@ -303,10 +301,10 @@ static NSEnumerator* modelsOfType(CouchDatabase* database, NSString* type) {
     [inst setValue: @"installation" ofProperty: @"type"];
     inst.state = @"created";
     inst.session = [SyncpointSession sessionInDatabase: self.database];
-    [inst setValue: [self getValueOfProperty: @"owner_id"] forKey: @"owner_id"];
+    [inst setValue: [self getValueOfProperty: @"owner_id"] ofProperty: @"owner_id"];
     inst.channel = self.channel;
     inst.subscription = self;
-    [inst setValue: name forKey: @"local_db_name"];
+    [inst setValue: name ofProperty: @"local_db_name"];
     return [[inst save] wait: outError] ? inst : nil;
 }
 

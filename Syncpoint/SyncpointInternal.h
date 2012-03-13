@@ -36,7 +36,7 @@
 @property (readwrite) NSDictionary* oauth_creds;
 
 /** The name of the remote database that the session database syncs with. */
-@property (readonly) NSString* controlDatabaseName;
+@property (readonly) NSString* control_database;
 
 @end
 

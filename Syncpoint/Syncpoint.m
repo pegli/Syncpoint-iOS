@@ -88,6 +88,9 @@
 }
 
 
+#pragma mark - AUTHENTICATION:
+
+
 - (void) authenticate: (SyncpointAuthenticator*)authenticator {
     LogTo(Syncpoint, @"Authenticating using %@...", authenticator);
     self.state = kSyncpointAuthenticating;
@@ -100,9 +103,6 @@
 - (BOOL) handleOpenURL: (NSURL*)url {
     return [_authenticator handleOpenURL: url];
 }
-
-
-#pragma mark - CALLBACKS FROM AUTHENTICATOR:
 
 
 - (void) authenticator: (SyncpointAuthenticator*)authenticator
@@ -196,7 +196,7 @@ authenticatedWithToken: (id)accessToken
 
 // Start bidirectional sync with the control database.
 - (void) connectToControlDB {
-    NSString* controlDBName = _session.controlDatabaseName;
+    NSString* controlDBName = _session.control_database;
     LogTo(Syncpoint, @"Syncing with control database %@", controlDBName);
     Assert(controlDBName);
     
@@ -221,7 +221,7 @@ authenticatedWithToken: (id)accessToken
         LogTo(Syncpoint, @"Up-to-date with control database");
         [self stopObservingSessionPull];
         // Now start the pull up again, in continuous mode:
-        _sessionPull = [self pullSessionFromDatabaseNamed: _session.controlDatabaseName];
+        _sessionPull = [self pullSessionFromDatabaseNamed: _session.control_database];
         _sessionPull.continuous = YES;
         self.state = kSyncpointReady;
         LogTo(Syncpoint, @"**READY**");
@@ -263,10 +263,9 @@ authenticatedWithToken: (id)accessToken
     NSURL *cloudChannelURL = [NSURL URLWithString: installation.channel.cloud_database
                                     relativeToURL: _remote];
     LogTo(Syncpoint, @"Syncing local db '%@' with remote %@", localChannelDb, cloudChannelURL);
-    CouchReplication *pull = [localChannelDb pullFromDatabaseAtURL:cloudChannelURL];
-    pull.continuous = YES;
-    CouchReplication *push = [localChannelDb pushToDatabaseAtURL:cloudChannelURL];
-    push.continuous = YES;
+    NSArray* repls = [localChannelDb replicateWithURL: cloudChannelURL exclusively: NO];
+    for (CouchPersistentReplication* repl in repls)
+        repl.continuous = YES;
 }
 
 
