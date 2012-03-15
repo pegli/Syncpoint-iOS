@@ -263,10 +263,6 @@ static NSEnumerator* modelsOfType(CouchDatabase* database, NSString* type) {
     return [[sub save] wait: outError] ? sub : nil;
 }
 
-- (void) unsubscribe {
-    // TODO
-}
-
 @end
 
 
@@ -276,9 +272,21 @@ static NSEnumerator* modelsOfType(CouchDatabase* database, NSString* type) {
 
 @dynamic channel;
 
+
 - (SyncpointInstallation*) installation {
     return self.channel.installation;
 }
+
+
+- (SyncpointInstallation*) allInstallations {
+    SyncpointChannel* channel = self.channel;
+    // TODO: Make this into a view query
+    for (SyncpointInstallation* inst in modelsOfType(self.database, @"installation"))
+        if (inst.channel == channel)
+            return inst;
+    return nil;
+}
+
 
 - (SyncpointInstallation*) makeInstallationWithLocalDatabase: (CouchDatabase*)localDB
                                                        error: (NSError**)outError
@@ -308,6 +316,16 @@ static NSEnumerator* modelsOfType(CouchDatabase* database, NSString* type) {
     return [[inst save] wait: outError] ? inst : nil;
 }
 
+
+- (BOOL) unsubscribe: (NSError**)outError {
+    SyncpointInstallation* inst = self.installation;
+    if (inst && ![inst uninstall: outError])
+        return NO;
+    return [[self deleteDocument] wait: outError];
+    //????: Is this how to do it?
+}
+
+
 @end
 
 
@@ -327,6 +345,10 @@ static NSEnumerator* modelsOfType(CouchDatabase* database, NSString* type) {
 - (bool) isLocal {
     SyncpointSession* session = [SyncpointSession sessionInDatabase: self.database];
     return [session.document.documentID isEqual: [self getValueOfProperty: @"session_id"]];
+}
+
+- (BOOL) uninstall: (NSError**)outError {
+    return [[self deleteDocument] wait: outError];
 }
 
 @end

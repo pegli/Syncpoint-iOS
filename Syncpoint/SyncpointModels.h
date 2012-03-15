@@ -81,9 +81,6 @@
 /** Creates a subscription to this channel. */
 - (SyncpointSubscription*) subscribe: (NSError**)error;
 
-/** Removes the user's subscription to this channel. */
-- (void) unsubscribe;
-
 /** Creates a subscription and local installation of this channel, synced to the given database.
     If a subscription already exists, it'll be reused without creating a duplicate.
     If a local installation already exists, it'll be returned without creating a duplicate.
@@ -116,6 +113,8 @@
 - (SyncpointInstallation*) makeInstallationWithLocalDatabase: (CouchDatabase*)localDatabase
                                                        error: (NSError**)error;
 
+- (BOOL) unsubscribe: (NSError**)outError;
+
 @end
 
 
@@ -137,5 +136,7 @@
 
 /** The session this is associated with. */
 @property (readonly) SyncpointSession* session;
+
+- (BOOL) uninstall: (NSError**)outError;
 
 @end

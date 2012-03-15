@@ -29,11 +29,6 @@
 @interface RootViewController ()
 @property(nonatomic, strong)CouchDatabase *database;
 @property(nonatomic, strong)NSURL* remoteSyncURL;
-- (void)updateSyncURL;
-- (void)showSyncButton;
-- (void)showSyncStatus;
-- (IBAction)configureSync:(id)sender;
-- (void)forgetSync;
 @end
 
 
@@ -79,7 +74,7 @@
     self.dataSource.query = query;
     self.dataSource.labelProperty = @"text";    // Document property to display in the cell label
 
-    [self updateSyncURL];
+    [self observeSync];
 }
 
 
@@ -91,7 +86,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear: animated];
     // Check for changes after returning from the sync config view:
-    [self updateSyncURL];
+    [self observeSync];
 }
 
 
@@ -273,24 +268,19 @@
 #pragma mark - SYNC:
 
 
-- (IBAction)configureSync:(id)sender {
-    UINavigationController* navController = (UINavigationController*)self.parentViewController;
-    ConfigViewController* controller = [[ConfigViewController alloc] init];
-    [navController pushViewController: controller animated: YES];
+- (IBAction) configureSync:(id)sender {
+    // TODO: Re-implement config UI for Syncpoint
 }
 
 
-- (void)updateSyncURL {
+- (void) observeSync {
     if (!self.database)
         return;
-    NSURL* newRemoteURL = nil;
-    NSString *syncpoint = [[NSUserDefaults standardUserDefaults] objectForKey:@"syncpoint"];
-    if (syncpoint.length > 0)
-        newRemoteURL = [NSURL URLWithString:syncpoint];
-    
     [self forgetSync];
     
-    NSArray* repls = [self.database replicateWithURL: newRemoteURL exclusively: YES];
+    NSArray* repls = self.database.replications;
+    if (repls.count < 2)
+        return;
     _pull = [repls objectAtIndex: 0];
     _push = [repls objectAtIndex: 1];
     [_pull addObserver: self forKeyPath: @"completed" options: 0 context: NULL];
