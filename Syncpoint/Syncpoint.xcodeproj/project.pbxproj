@@ -22,20 +22,20 @@
 		278495F0150AC44100A41C44 /* libCouchCocoa.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 278495EF150AC44100A41C44 /* libCouchCocoa.a */; };
 		27849608150C195400A41C44 /* SyncpointInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 27849607150C195400A41C44 /* SyncpointInternal.h */; };
 		27849609150C195400A41C44 /* SyncpointInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 27849607150C195400A41C44 /* SyncpointInternal.h */; };
-		2799D1ED1505A8E200CB90E0 /* SyncpointAuthenticator.h in Headers */ = {isa = PBXBuildFile; fileRef = 2799D1EB1505A8E200CB90E0 /* SyncpointAuthenticator.h */; };
-		2799D1EE1505A8E200CB90E0 /* SyncpointAuthenticator.h in Headers */ = {isa = PBXBuildFile; fileRef = 2799D1EB1505A8E200CB90E0 /* SyncpointAuthenticator.h */; };
+		2799D1ED1505A8E200CB90E0 /* SyncpointAuthenticator.h in Headers */ = {isa = PBXBuildFile; fileRef = 2799D1EB1505A8E200CB90E0 /* SyncpointAuthenticator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2799D1EE1505A8E200CB90E0 /* SyncpointAuthenticator.h in Headers */ = {isa = PBXBuildFile; fileRef = 2799D1EB1505A8E200CB90E0 /* SyncpointAuthenticator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2799D1EF1505A8E200CB90E0 /* SyncpointAuthenticator.m in Sources */ = {isa = PBXBuildFile; fileRef = 2799D1EC1505A8E200CB90E0 /* SyncpointAuthenticator.m */; };
 		2799D1F01505A8E200CB90E0 /* SyncpointAuthenticator.m in Sources */ = {isa = PBXBuildFile; fileRef = 2799D1EC1505A8E200CB90E0 /* SyncpointAuthenticator.m */; };
-		2799D1F71505B36600CB90E0 /* SyncpointFacebookAuth.h in Headers */ = {isa = PBXBuildFile; fileRef = 2799D1F51505B36600CB90E0 /* SyncpointFacebookAuth.h */; };
-		2799D1F81505B36600CB90E0 /* SyncpointFacebookAuth.h in Headers */ = {isa = PBXBuildFile; fileRef = 2799D1F51505B36600CB90E0 /* SyncpointFacebookAuth.h */; };
+		2799D1F71505B36600CB90E0 /* SyncpointFacebookAuth.h in Headers */ = {isa = PBXBuildFile; fileRef = 2799D1F51505B36600CB90E0 /* SyncpointFacebookAuth.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2799D1F81505B36600CB90E0 /* SyncpointFacebookAuth.h in Headers */ = {isa = PBXBuildFile; fileRef = 2799D1F51505B36600CB90E0 /* SyncpointFacebookAuth.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2799D1F91505B36600CB90E0 /* SyncpointFacebookAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = 2799D1F61505B36600CB90E0 /* SyncpointFacebookAuth.m */; };
 		2799D1FA1505B36600CB90E0 /* SyncpointFacebookAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = 2799D1F61505B36600CB90E0 /* SyncpointFacebookAuth.m */; };
-		2799D2091507D74C00CB90E0 /* SyncpointModels.h in Headers */ = {isa = PBXBuildFile; fileRef = 2799D2071507D74B00CB90E0 /* SyncpointModels.h */; };
-		2799D20A1507D74C00CB90E0 /* SyncpointModels.h in Headers */ = {isa = PBXBuildFile; fileRef = 2799D2071507D74B00CB90E0 /* SyncpointModels.h */; };
+		2799D2091507D74C00CB90E0 /* SyncpointModels.h in Headers */ = {isa = PBXBuildFile; fileRef = 2799D2071507D74B00CB90E0 /* SyncpointModels.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2799D20A1507D74C00CB90E0 /* SyncpointModels.h in Headers */ = {isa = PBXBuildFile; fileRef = 2799D2071507D74B00CB90E0 /* SyncpointModels.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2799D20B1507D74C00CB90E0 /* SyncpointModels.m in Sources */ = {isa = PBXBuildFile; fileRef = 2799D2081507D74B00CB90E0 /* SyncpointModels.m */; };
 		2799D20C1507D74C00CB90E0 /* SyncpointModels.m in Sources */ = {isa = PBXBuildFile; fileRef = 2799D2081507D74B00CB90E0 /* SyncpointModels.m */; };
-		27EB94CD14F7015800072752 /* Syncpoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 27EB94CB14F7015800072752 /* Syncpoint.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		27EB94CE14F7015800072752 /* Syncpoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EB94CC14F7015800072752 /* Syncpoint.m */; };
+		27EB94CD14F7015800072752 /* SyncpointClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 27EB94CB14F7015800072752 /* SyncpointClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		27EB94CE14F7015800072752 /* SyncpointClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EB94CC14F7015800072752 /* SyncpointClient.m */; };
 		27EB94CF14F701EF00072752 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB94B014F700AC00072752 /* Foundation.framework */; };
 		27EB94F814F703A400072752 /* libCouchCocoa.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB94F714F703A400072752 /* libCouchCocoa.a */; };
 		27EB94FB14F7043C00072752 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB94FA14F7043C00072752 /* libsqlite3.dylib */; };
@@ -43,7 +43,7 @@
 		27EB94FF14F7044900072752 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB94FE14F7044900072752 /* SystemConfiguration.framework */; };
 		27EB951414F70D4D00072752 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB94B014F700AC00072752 /* Foundation.framework */; };
 		27EB952114F70DDD00072752 /* libfacebook_ios_sdk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB952014F70DDD00072752 /* libfacebook_ios_sdk.a */; };
-		27EB952214F7107B00072752 /* Syncpoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EB94CC14F7015800072752 /* Syncpoint.m */; };
+		27EB952214F7107B00072752 /* SyncpointClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EB94CC14F7015800072752 /* SyncpointClient.m */; };
 		27EB957E14F87C6800072752 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB957D14F87C6800072752 /* UIKit.framework */; };
 		27EB957F14F87C6800072752 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB94B014F700AC00072752 /* Foundation.framework */; };
 		27EB958114F87C6800072752 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB958014F87C6800072752 /* CoreGraphics.framework */; };
@@ -64,6 +64,9 @@
 		27EB95BF14F966B500072752 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB95BE14F966B500072752 /* Security.framework */; };
 		27EB95C114F966BB00072752 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB95C014F966BB00072752 /* SystemConfiguration.framework */; };
 		27EB95C314F96AA100072752 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB95C214F96AA000072752 /* libz.dylib */; };
+		27EDEA511513F1960060EDB9 /* SyncpointClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 27EB94CB14F7015800072752 /* SyncpointClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		27EDEA541513F2200060EDB9 /* Syncpoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 27EDEA531513F2200060EDB9 /* Syncpoint.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		27EDEA551513F2200060EDB9 /* Syncpoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 27EDEA531513F2200060EDB9 /* Syncpoint.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -121,8 +124,8 @@
 		2799D2081507D74B00CB90E0 /* SyncpointModels.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyncpointModels.m; sourceTree = "<group>"; };
 		27EB94A814F700AC00072752 /* Syncpoint.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Syncpoint.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		27EB94B014F700AC00072752 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		27EB94CB14F7015800072752 /* Syncpoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Syncpoint.h; sourceTree = "<group>"; };
-		27EB94CC14F7015800072752 /* Syncpoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Syncpoint.m; sourceTree = "<group>"; };
+		27EB94CB14F7015800072752 /* SyncpointClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyncpointClient.h; sourceTree = "<group>"; };
+		27EB94CC14F7015800072752 /* SyncpointClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SyncpointClient.m; sourceTree = "<group>"; };
 		27EB94F714F703A400072752 /* libCouchCocoa.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCouchCocoa.a; path = ../CouchCocoa/build/Release/libCouchCocoa.a; sourceTree = "<group>"; };
 		27EB94F914F7040100072752 /* Syncpoint-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Syncpoint-Info.plist"; sourceTree = "<group>"; };
 		27EB94FA14F7043C00072752 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
@@ -159,6 +162,7 @@
 		27EB95BE14F966B500072752 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.0.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
 		27EB95C014F966BB00072752 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.0.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
 		27EB95C214F96AA000072752 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.0.sdk/usr/lib/libz.dylib; sourceTree = DEVELOPER_DIR; };
+		27EDEA531513F2200060EDB9 /* Syncpoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Syncpoint.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -245,8 +249,9 @@
 		27EB949C14F700AC00072752 = {
 			isa = PBXGroup;
 			children = (
-				27EB94CB14F7015800072752 /* Syncpoint.h */,
-				27EB94CC14F7015800072752 /* Syncpoint.m */,
+				27EDEA531513F2200060EDB9 /* Syncpoint.h */,
+				27EB94CB14F7015800072752 /* SyncpointClient.h */,
+				27EB94CC14F7015800072752 /* SyncpointClient.m */,
 				2799D2071507D74B00CB90E0 /* SyncpointModels.h */,
 				2799D2081507D74B00CB90E0 /* SyncpointModels.m */,
 				27849607150C195400A41C44 /* SyncpointInternal.h */,
@@ -335,11 +340,12 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				27EB94CD14F7015800072752 /* Syncpoint.h in Headers */,
+				27EB94CD14F7015800072752 /* SyncpointClient.h in Headers */,
 				2799D1ED1505A8E200CB90E0 /* SyncpointAuthenticator.h in Headers */,
 				2799D1F71505B36600CB90E0 /* SyncpointFacebookAuth.h in Headers */,
 				2799D2091507D74C00CB90E0 /* SyncpointModels.h in Headers */,
 				27849608150C195400A41C44 /* SyncpointInternal.h in Headers */,
+				27EDEA541513F2200060EDB9 /* Syncpoint.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -351,6 +357,8 @@
 				2799D1F81505B36600CB90E0 /* SyncpointFacebookAuth.h in Headers */,
 				2799D20A1507D74C00CB90E0 /* SyncpointModels.h in Headers */,
 				27849609150C195400A41C44 /* SyncpointInternal.h in Headers */,
+				27EDEA511513F1960060EDB9 /* SyncpointClient.h in Headers */,
+				27EDEA551513F2200060EDB9 /* Syncpoint.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -507,7 +515,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				27EB94CE14F7015800072752 /* Syncpoint.m in Sources */,
+				27EB94CE14F7015800072752 /* SyncpointClient.m in Sources */,
 				2799D1EF1505A8E200CB90E0 /* SyncpointAuthenticator.m in Sources */,
 				2799D1F91505B36600CB90E0 /* SyncpointFacebookAuth.m in Sources */,
 				2799D20B1507D74C00CB90E0 /* SyncpointModels.m in Sources */,
@@ -518,7 +526,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				27EB952214F7107B00072752 /* Syncpoint.m in Sources */,
+				27EB952214F7107B00072752 /* SyncpointClient.m in Sources */,
 				2799D1F01505A8E200CB90E0 /* SyncpointAuthenticator.m in Sources */,
 				2799D1FA1505B36600CB90E0 /* SyncpointFacebookAuth.m in Sources */,
 				2799D20C1507D74C00CB90E0 /* SyncpointModels.m in Sources */,
@@ -701,6 +709,7 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = Syncpoint;
+				PUBLIC_HEADERS_FOLDER_PATH = Headers;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 			};
@@ -720,6 +729,7 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = Syncpoint;
+				PUBLIC_HEADERS_FOLDER_PATH = Headers;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				VALIDATE_PRODUCT = YES;

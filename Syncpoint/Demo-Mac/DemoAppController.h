@@ -14,7 +14,7 @@
 //  and limitations under the License.
 
 #import <Cocoa/Cocoa.h>
-@class CouchDatabase, CouchPersistentReplication, DemoQuery, Syncpoint;
+@class CouchDatabase, CouchPersistentReplication, DemoQuery, SyncpointClient;
 
 
 /** Generic application delegate for simple Mac OS CouchDB demo apps.
@@ -33,7 +33,7 @@
     IBOutlet NSTextField* _syncURLField;
     IBOutlet NSButtonCell* _syncPushCheckbox, *_syncPullCheckbox;
     
-    Syncpoint* _syncpoint;
+    SyncpointClient* _syncpoint;
     CouchDatabase* _database;
     DemoQuery* _query;
     BOOL _syncConfiguringDefault;

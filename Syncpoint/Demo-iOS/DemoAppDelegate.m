@@ -17,9 +17,7 @@
 #import "RootViewController.h"
 #import <CouchCocoa/CouchCocoa.h>
 #import <CouchCocoa/CouchTouchDBServer.h>
-#import "Syncpoint.h"
-#import "SyncpointModels.h"
-#import "SyncpointFacebookAuth.h"
+#import <Syncpoint/Syncpoint.h>
 
 
 #define kServerURLString @"http://single.couchbase.net/"
@@ -63,7 +61,7 @@
     // Start up Syncpoint client:
     NSURL* remote = [NSURL URLWithString: kServerURLString];
     [SyncpointFacebookAuth setFacebookAppID: @"251541441584833"];
-    self.syncpoint = [[Syncpoint alloc] initWithLocalServer: server
+    self.syncpoint = [[SyncpointClient alloc] initWithLocalServer: server
                                                remoteServer: remote
                                                       error: &error];
     if (!syncpoint) {

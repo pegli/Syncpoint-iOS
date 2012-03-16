@@ -7,7 +7,7 @@
 //
 
 #import "SyncpointAuthenticator.h"
-#import "Syncpoint.h"
+#import "SyncpointClient.h"
 #import "TDMisc.h"
 
 

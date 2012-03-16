@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Couchbase, Inc. All rights reserved.
 //
 
-#import "Syncpoint.h"
+#import "SyncpointClient.h"
 #import "SyncpointModels.h"
 
 

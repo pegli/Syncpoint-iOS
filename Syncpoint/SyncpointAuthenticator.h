@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-@class Syncpoint;
+@class SyncpointClient;
 
 
 /** Abstract base class for authentication/pairing services that work with Syncpoint.
@@ -15,10 +15,10 @@
 @interface SyncpointAuthenticator : NSObject
 {
     @private
-    Syncpoint* _syncpoint;
+    SyncpointClient* _syncpoint;
 }
 
-@property (readwrite, strong) Syncpoint* syncpoint;
+@property (readwrite, strong) SyncpointClient* syncpoint;
 
 /** The "type" property value to use for session auth documents created by this instance.
     Abstract method: Subclasses must override it. */

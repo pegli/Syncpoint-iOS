@@ -1,12 +1,12 @@
 //
-//  Syncpoint.m
+//  SyncpointClient.m
 //  Syncpoint
 //
 //  Created by Jens Alfke on 2/23/12.
 //  Copyright (c) 2012 Couchbase, Inc. All rights reserved.
 //
 
-#import "Syncpoint.h"
+#import "SyncpointClient.h"
 #import "SyncpointAuthenticator.h"
 #import "SyncpointModels.h"
 #import "SyncpointInternal.h"
@@ -17,12 +17,12 @@
 #define kSessionDatabaseName @"sessions"
 
 
-@interface Syncpoint ()
+@interface SyncpointClient ()
 @property (readwrite, nonatomic) SyncpointState state;
 @end
 
 
-@implementation Syncpoint
+@implementation SyncpointClient
 {
     @private
     NSURL* _remote;

@@ -18,9 +18,7 @@
 #import "MYURLHandler.h"
 #import "Test.h"
 #import "MYBlockUtils.h"
-#import "Syncpoint.h"
-#import "SyncpointModels.h"
-#import "SyncpointFacebookAuth.h"
+#import <Syncpoint/Syncpoint.h>
 #import <CouchCocoa/CouchCocoa.h>
 #import <CouchCocoa/CouchTouchDBServer.h>
 #import <CouchCocoa/CouchDesignDocument_Embedded.h>
@@ -114,7 +112,7 @@ int main (int argc, const char * argv[]) {
     NSError* error;
     NSURL* remote = [NSURL URLWithString: kServerURLString];
     [SyncpointFacebookAuth setFacebookAppID: @"251541441584833"];
-    _syncpoint = [[Syncpoint alloc] initWithLocalServer: server
+    _syncpoint = [[SyncpointClient alloc] initWithLocalServer: server
                                                remoteServer: remote
                                                       error: &error];
     if (!_syncpoint) {
