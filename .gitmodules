@@ -1,9 +1,9 @@
 [submodule "CouchCocoa"]
 	path = CouchCocoa
-	url = git@github.com:couchbaselabs/CouchCocoa
+	url = git://github.com/couchbaselabs/CouchCocoa
 [submodule "TouchDB"]
 	path = TouchDB
-	url = git@github.com:couchbaselabs/TouchDB-iOS.git
+	url = git://github.com/couchbaselabs/TouchDB-iOS.git
 [submodule "vendor/facebook-ios-sdk"]
 	path = vendor/facebook-ios-sdk
-	url = git://github.com/facebook/facebook-ios-sdk.git
+	url = git://github.com/couchbaselabs/facebook-ios-sdk.git
