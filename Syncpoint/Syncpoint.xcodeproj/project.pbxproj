@@ -7,6 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		27108C6C15126A6500E5B92C /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27108C6B15126A6500E5B92C /* Security.framework */; };
+		27108C8615127F6300E5B92C /* libfacebook_mac_sdk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27108C8515127F6300E5B92C /* libfacebook_mac_sdk.a */; };
+		27108C8815127F9200E5B92C /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27108C8715127F9200E5B92C /* AppKit.framework */; };
+		27108C901512841600E5B92C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27108C8F1512841600E5B92C /* Cocoa.framework */; };
+		27108CBA1512843100E5B92C /* DemoAppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27108CAD1512843100E5B92C /* DemoAppController.m */; };
+		27108CBB1512843100E5B92C /* DemoQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 27108CAF1512843100E5B92C /* DemoQuery.m */; };
+		27108CBF1512843100E5B92C /* Demo-Mac-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 27108CB41512843100E5B92C /* Demo-Mac-Info.plist */; };
+		27108CC01512843100E5B92C /* Demo-Mac.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27108CB51512843100E5B92C /* Demo-Mac.xib */; };
+		27108CC11512843100E5B92C /* ShoppingItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 27108CB71512843100E5B92C /* ShoppingItem.m */; };
+		27108CC3151285B800E5B92C /* Syncpoint.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27EB94A814F700AC00072752 /* Syncpoint.framework */; };
+		27108CC61512861300E5B92C /* Syncpoint.framework in Copy Framework */ = {isa = PBXBuildFile; fileRef = 27EB94A814F700AC00072752 /* Syncpoint.framework */; };
+		27108CE215128FB000E5B92C /* MYURLHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 27108CE115128FB000E5B92C /* MYURLHandler.m */; };
 		278495F0150AC44100A41C44 /* libCouchCocoa.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 278495EF150AC44100A41C44 /* libCouchCocoa.a */; };
 		27849608150C195400A41C44 /* SyncpointInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 27849607150C195400A41C44 /* SyncpointInternal.h */; };
 		27849609150C195400A41C44 /* SyncpointInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 27849607150C195400A41C44 /* SyncpointInternal.h */; };
@@ -64,7 +76,40 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		27108CC51512860800E5B92C /* Copy Framework */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				27108CC61512861300E5B92C /* Syncpoint.framework in Copy Framework */,
+			);
+			name = "Copy Framework";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		27108C6B15126A6500E5B92C /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		27108C8515127F6300E5B92C /* libfacebook_mac_sdk.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfacebook_mac_sdk.a; path = "../vendor/facebook-ios-sdk/src/build/Release/libfacebook_mac_sdk.a"; sourceTree = "<group>"; };
+		27108C8715127F9200E5B92C /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		27108C8D1512841600E5B92C /* Syncpoint Mac Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Syncpoint Mac Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		27108C8F1512841600E5B92C /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		27108C921512841600E5B92C /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		27108C931512841600E5B92C /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		27108C941512841600E5B92C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		27108CAB1512843100E5B92C /* deleteDB.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = deleteDB.sh; sourceTree = "<group>"; };
+		27108CAC1512843100E5B92C /* DemoAppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoAppController.h; sourceTree = "<group>"; };
+		27108CAD1512843100E5B92C /* DemoAppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoAppController.m; sourceTree = "<group>"; };
+		27108CAE1512843100E5B92C /* DemoQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoQuery.h; sourceTree = "<group>"; };
+		27108CAF1512843100E5B92C /* DemoQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoQuery.m; sourceTree = "<group>"; };
+		27108CB01512843100E5B92C /* editDB.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = editDB.sh; sourceTree = "<group>"; };
+		27108CB41512843100E5B92C /* Demo-Mac-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Demo-Mac-Info.plist"; sourceTree = "<group>"; };
+		27108CB51512843100E5B92C /* Demo-Mac.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Demo-Mac.xib"; sourceTree = "<group>"; };
+		27108CB61512843100E5B92C /* ShoppingItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShoppingItem.h; sourceTree = "<group>"; };
+		27108CB71512843100E5B92C /* ShoppingItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShoppingItem.m; sourceTree = "<group>"; };
+		27108CE115128FB000E5B92C /* MYURLHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MYURLHandler.m; path = ../../TouchDB/vendor/MYUtilities/MYURLHandler.m; sourceTree = "<group>"; };
 		278495EF150AC44100A41C44 /* libCouchCocoa.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCouchCocoa.a; path = "../build/Syncpoint/Build/Products/Debug-iphonesimulator/libCouchCocoa.a"; sourceTree = "<group>"; };
 		27849607150C195400A41C44 /* SyncpointInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyncpointInternal.h; sourceTree = "<group>"; };
 		2799D1EB1505A8E200CB90E0 /* SyncpointAuthenticator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyncpointAuthenticator.h; sourceTree = "<group>"; };
@@ -117,10 +162,22 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		27108C8A1512841600E5B92C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27108CC3151285B800E5B92C /* Syncpoint.framework in Frameworks */,
+				27108C901512841600E5B92C /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		27EB94A414F700AC00072752 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27108C8815127F9200E5B92C /* AppKit.framework in Frameworks */,
+				27108C8615127F6300E5B92C /* libfacebook_mac_sdk.a in Frameworks */,
+				27108C6C15126A6500E5B92C /* Security.framework in Frameworks */,
 				27EB94FF14F7044900072752 /* SystemConfiguration.framework in Frameworks */,
 				27EB94FD14F7044300072752 /* libz.dylib in Frameworks */,
 				27EB94FB14F7043C00072752 /* libsqlite3.dylib in Frameworks */,
@@ -157,6 +214,34 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		27108C911512841600E5B92C /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				27108C921512841600E5B92C /* AppKit.framework */,
+				27108C931512841600E5B92C /* CoreData.framework */,
+				27108C941512841600E5B92C /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		27108CAA1512843100E5B92C /* Demo-Mac */ = {
+			isa = PBXGroup;
+			children = (
+				27108CAC1512843100E5B92C /* DemoAppController.h */,
+				27108CAD1512843100E5B92C /* DemoAppController.m */,
+				27108CAE1512843100E5B92C /* DemoQuery.h */,
+				27108CAF1512843100E5B92C /* DemoQuery.m */,
+				27108CB61512843100E5B92C /* ShoppingItem.h */,
+				27108CB71512843100E5B92C /* ShoppingItem.m */,
+				27108CE115128FB000E5B92C /* MYURLHandler.m */,
+				27108CB41512843100E5B92C /* Demo-Mac-Info.plist */,
+				27108CB51512843100E5B92C /* Demo-Mac.xib */,
+				27108CAB1512843100E5B92C /* deleteDB.sh */,
+				27108CB01512843100E5B92C /* editDB.sh */,
+			);
+			path = "Demo-Mac";
+			sourceTree = "<group>";
+		};
 		27EB949C14F700AC00072752 = {
 			isa = PBXGroup;
 			children = (
@@ -173,6 +258,7 @@
 				27EB954114F71AAC00072752 /* SyncpointPrefix.pch */,
 				2799D2061506F7AD00CB90E0 /* Schema.md */,
 				27EB959214F87C9700072752 /* Demo-iOS */,
+				27108CAA1512843100E5B92C /* Demo-Mac */,
 				27EB94AA14F700AC00072752 /* Frameworks */,
 				27EB94A914F700AC00072752 /* Products */,
 			);
@@ -184,6 +270,7 @@
 				27EB94A814F700AC00072752 /* Syncpoint.framework */,
 				27EB951314F70D4D00072752 /* libSyncpoint.a */,
 				27EB957B14F87C6800072752 /* Syncpoint Demo.app */,
+				27108C8D1512841600E5B92C /* Syncpoint Mac Demo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -191,6 +278,9 @@
 		27EB94AA14F700AC00072752 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				27108C8715127F9200E5B92C /* AppKit.framework */,
+				27108C8515127F6300E5B92C /* libfacebook_mac_sdk.a */,
+				27108C6B15126A6500E5B92C /* Security.framework */,
 				278495EF150AC44100A41C44 /* libCouchCocoa.a */,
 				27EB95C214F96AA000072752 /* libz.dylib */,
 				27EB95C014F966BB00072752 /* SystemConfiguration.framework */,
@@ -206,6 +296,8 @@
 				27EB94B014F700AC00072752 /* Foundation.framework */,
 				27EB957D14F87C6800072752 /* UIKit.framework */,
 				27EB958014F87C6800072752 /* CoreGraphics.framework */,
+				27108C8F1512841600E5B92C /* Cocoa.framework */,
+				27108C911512841600E5B92C /* Other Frameworks */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -265,6 +357,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		27108C8C1512841600E5B92C /* Syncpoint Mac Demo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 27108CA71512841700E5B92C /* Build configuration list for PBXNativeTarget "Syncpoint Mac Demo" */;
+			buildPhases = (
+				27108C891512841600E5B92C /* Sources */,
+				27108C8A1512841600E5B92C /* Frameworks */,
+				27108C8B1512841600E5B92C /* Resources */,
+				27108CC51512860800E5B92C /* Copy Framework */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Syncpoint Mac Demo";
+			productName = "Syncpoint Mac Demo";
+			productReference = 27108C8D1512841600E5B92C /* Syncpoint Mac Demo.app */;
+			productType = "com.apple.product-type.application";
+		};
 		27EB94A714F700AC00072752 /* Syncpoint Mac */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 27EB94BD14F700AC00072752 /* Build configuration list for PBXNativeTarget "Syncpoint Mac" */;
@@ -342,11 +452,21 @@
 				27EB94A714F700AC00072752 /* Syncpoint Mac */,
 				27EB951214F70D4D00072752 /* Syncpoint iOS library */,
 				27EB957A14F87C6800072752 /* Syncpoint Demo */,
+				27108C8C1512841600E5B92C /* Syncpoint Mac Demo */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		27108C8B1512841600E5B92C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27108CBF1512843100E5B92C /* Demo-Mac-Info.plist in Resources */,
+				27108CC01512843100E5B92C /* Demo-Mac.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		27EB94A614F700AC00072752 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -372,6 +492,17 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		27108C891512841600E5B92C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27108CBA1512843100E5B92C /* DemoAppController.m in Sources */,
+				27108CBB1512843100E5B92C /* DemoQuery.m in Sources */,
+				27108CC11512843100E5B92C /* ShoppingItem.m in Sources */,
+				27108CE215128FB000E5B92C /* MYURLHandler.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		27EB94A314F700AC00072752 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -427,6 +558,38 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		27108CA81512841700E5B92C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Demo-Mac/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				INFOPLIST_FILE = "Demo-Mac/Demo-Mac-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		27108CA91512841700E5B92C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Demo-Mac/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				INFOPLIST_FILE = "Demo-Mac/Demo-Mac-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
 		27EB94BB14F700AC00072752 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -600,6 +763,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		27108CA71512841700E5B92C /* Build configuration list for PBXNativeTarget "Syncpoint Mac Demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27108CA81512841700E5B92C /* Debug */,
+				27108CA91512841700E5B92C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		27EB94A114F700AC00072752 /* Build configuration list for PBXProject "Syncpoint" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

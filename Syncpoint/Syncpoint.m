@@ -63,6 +63,10 @@
                 LogTo(Syncpoint, @"Session is active");
                 [self connectToControlDB];
                 [self observeSessionDatabase];
+            } else if (nil != _session.error) {
+                LogTo(Syncpoint, @"Session has error: %@", _session.error.localizedDescription);
+                _state = kSyncpointHasError;
+                [self activateSession];
             } else {
                 LogTo(Syncpoint, @"Session is not active");
                 [self activateSession];
@@ -155,6 +159,7 @@ authenticatedWithToken: (id)accessToken
 - (void) activateSession {
     LogTo(Syncpoint, @"Activating session document...");
     Assert(!_session.isActive);
+    [_session clearState: nil];
     self.state = kSyncpointActivating;
     NSString* sessionID = _session.document.documentID;
     [self pushSessionToDatabaseNamed: kSessionDatabaseName];
@@ -190,6 +195,12 @@ authenticatedWithToken: (id)accessToken
         [_sessionPush stop];
         _sessionPush = nil;
         [self connectToControlDB];
+    } else if (_state != kSyncpointHasError) {
+        NSError* error = _session.error;
+        if (error) {
+            self.state = kSyncpointHasError;
+            LogTo(Syncpoint, @"Session has error: %@", error);
+        }
     }
 }
 

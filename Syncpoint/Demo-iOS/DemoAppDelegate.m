@@ -70,8 +70,14 @@
         NSLog(@"Syncpoint failed to start: %@", error);
         exit(1);
     }
-    [syncpoint addObserver: self forKeyPath: @"state"
-                   options: NSKeyValueObservingOptionOld context: NULL];
+    
+    if (![syncpoint.session installChannelNamed: @"grocery-sync"
+                                     toDatabase: self.database
+                                          error: &error]
+            && error != nil) {
+        [self showAlert: @"Couldn't subscribe to channel" error: error fatal: NO];
+    }
+
     if (syncpoint.state == kSyncpointUnauthenticated)
         [syncpoint authenticate: [SyncpointFacebookAuth new]];
 
@@ -82,24 +88,6 @@
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
     NSAssert(syncpoint, @"Syncpoint not created yet");
     return [syncpoint handleOpenURL: url];
-}
-
-
-- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
-                         change:(NSDictionary *)change context:(void *)context
-{
-    if (object == syncpoint && [keyPath isEqualToString: @"state"]) {
-        SyncpointState oldState = [[change objectForKey: NSKeyValueChangeOldKey] intValue];
-        if (oldState < kSyncpointReady && syncpoint.state == kSyncpointReady) {
-            // Syncpoint is now ready -- subscribe if necessary:
-            NSError* error;
-            if (![syncpoint.session installChannelNamed: @"grocery-sync"
-                                             toDatabase: self.database
-                                                  error: &error]) {
-                [self showAlert: @"Couldn't subscribe to channel" error: error fatal: NO];
-            }
-        }
-    }
 }
 
 

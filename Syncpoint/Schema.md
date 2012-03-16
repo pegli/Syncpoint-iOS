@@ -3,8 +3,9 @@
 ## Session ##
 type            depends on auth type, e.g. "session-fb"
 oauth_creds     {"consumer_key": , "consumer_secret": , "token_secret" : , "token": }
-state           "new" | "active"
+state           "new" | "active" | "error"
 session         {"user_id": server-assigned user ID, "control_database": control db name}
+error           {"message": error message, "errno": error#}
 
 ...plus custom properties defined by auth type, such as:
 fb_access_token Facebook token string

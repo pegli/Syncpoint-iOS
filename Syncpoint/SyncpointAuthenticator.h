@@ -18,7 +18,7 @@
     Syncpoint* _syncpoint;
 }
 
-@property (readwrite) Syncpoint* syncpoint;
+@property (readwrite, strong) Syncpoint* syncpoint;
 
 /** The "type" property value to use for session auth documents created by this instance.
     Abstract method: Subclasses must override it. */

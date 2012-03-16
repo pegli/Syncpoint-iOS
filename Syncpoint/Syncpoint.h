@@ -11,6 +11,7 @@
 
 
 typedef enum {
+    kSyncpointHasError,         /**< Server failed to authenticate/activate. */
     kSyncpointUnauthenticated,  /**< No session, and no auth token to pair with */
     kSyncpointAuthenticating,   /**< Authenticating user credentials (e.g. by OAuth) */
     kSyncpointActivating,       /**< Got auth token, now setting up with the server */

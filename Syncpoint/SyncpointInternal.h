@@ -38,6 +38,8 @@
 /** The name of the remote database that the session database syncs with. */
 @property (readonly) NSString* control_database;
 
+- (BOOL) clearState: (NSError**)outError;
+
 @end
 
 

@@ -26,6 +26,9 @@
 /** The server-assigned ID of the local user. */
 @property (readonly) NSString* user_id;
 
+/** Server-side error, if the server's unable to authenticate the user's credentials. */
+@property (readonly) NSError* error;
+
 /** Returns the existing channel with the given name, or nil if it doesn't exist. */
 - (SyncpointChannel*) channelWithName: (NSString*)name;
 
@@ -35,10 +38,11 @@
                                     error: (NSError**)error;
 
 /** Convenience method that creates a channel if none with that name exists, then creates a subscription to it, synchronizing it with a local database.
+    It is OK to call this before the session has been activated. The request will be queued, and the installation created as soon as the session goes live.
     @param channelName  The channel name. If a channel with this name doesn't exist, it will be created.
     @param localDatabase  The database on the local server to sync the channel database with. If it doesn't exist yet, it will be created. Or pass nil to have a new randomly-named database created.
     @param error  On failure, will be filled in with an NSError describing the problem.
-    @return  On success, an object representing the installation. On failure, nil. */
+    @return  On success, an object representing the installation. On failure (or if the installation is deferred because the session isn't active yet), nil. */
 - (SyncpointInstallation*) installChannelNamed: (NSString*)channelName
                                     toDatabase: (CouchDatabase*)localDatabase
                                          error: (NSError**)error;

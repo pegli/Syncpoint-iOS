@@ -11,6 +11,7 @@
 #import <CouchCocoa/CouchModelFactory.h>
 #import "TDMisc.h"
 #import "CollectionUtils.h"
+#import <Security/SecRandom.h>
 
 
 @interface CouchModel (Internal)
@@ -69,6 +70,9 @@ static NSEnumerator* modelsOfType(CouchDatabase* database, NSString* type) {
 
 
 @implementation SyncpointSession
+{
+    NSMutableArray* _toBeInstalled;
+}
 
 @dynamic user_id, oauth_creds, control_database;
 
@@ -133,6 +137,25 @@ static NSEnumerator* modelsOfType(CouchDatabase* database, NSString* type) {
 }
 
 
+- (NSError*) error {
+    if (![self.state isEqual: @"error"])
+        return nil;
+    NSDictionary* errDict = [self getValueOfProperty: @"error"];
+    int code = [$castIf(NSNumber, [errDict objectForKey: @"errno"]) intValue];
+    NSString* message = $castIf(NSString, [errDict objectForKey: @"message"]);
+    return [NSError errorWithDomain: NSPOSIXErrorDomain
+                               code: (code ? code : -1)     // don't allow a zero code
+                           userInfo: $dict({NSLocalizedDescriptionKey, message})];
+}
+
+
+- (BOOL) clearState: (NSError**)outError {
+    self.state = @"new";
+    [self setValue: nil ofProperty: @"error"];
+    return [[self save] wait: outError];
+}
+
+
 - (SyncpointChannel*) makeChannelWithName: (NSString*)name
                                     error: (NSError**)outError
 {
@@ -159,11 +182,37 @@ static NSEnumerator* modelsOfType(CouchDatabase* database, NSString* type) {
                                     toDatabase: (CouchDatabase*)localDatabase
                                          error: (NSError**)outError
 {
-    Assert(self.isActive);
-    SyncpointChannel* channel = [self channelWithName: channelName];
-    if (!channel)
-        channel = [self makeChannelWithName: channelName error: outError];
-    return [channel makeInstallationWithLocalDatabase: localDatabase error: outError];
+    LogTo(Syncpoint, @"Install channel named '%@' to %@", channelName, localDatabase);
+    if (self.isActive) {
+        SyncpointChannel* channel = [self channelWithName: channelName];
+        if (!channel)
+            channel = [self makeChannelWithName: channelName error: outError];
+        return [channel makeInstallationWithLocalDatabase: localDatabase error: outError];
+    } else {
+        // If not activated yet, make a note of what to install:
+        LogTo(Syncpoint, @"    ...deferring till session becomes active");
+        if (!_toBeInstalled)
+            _toBeInstalled = $marray();
+        [_toBeInstalled addObject: $array(channelName, localDatabase)];
+        if (outError) *outError = nil;
+        return nil;
+    }
+}
+
+
+- (void) didLoadFromDocument {
+    [super didLoadFromDocument];
+    
+    if (_toBeInstalled && self.isActive) {
+        LogTo(Syncpoint, @"Installing %u pending channels...", _toBeInstalled.count);
+        NSMutableArray* toInstall = _toBeInstalled;
+        _toBeInstalled = nil;
+        for (NSArray* info in toInstall) {
+             [self installChannelNamed: [info objectAtIndex: 0]
+                            toDatabase: [info objectAtIndex: 1]
+                                 error: nil];
+        }
+    }
 }
 
 
