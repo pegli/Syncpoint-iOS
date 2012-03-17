@@ -7,7 +7,7 @@
 //
 
 #import "SyncpointFacebookAuth.h"
-#import "Syncpoint.h"
+#import "SyncpointClient.h"
 #import "Facebook.h"
 
 

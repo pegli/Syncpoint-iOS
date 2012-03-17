@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 Couchbase, Inc. All rights reserved.
 //
 
+#import <Syncpoint/CouchCocoa.h>
+
 #import <Syncpoint/SyncpointClient.h>
 #import <Syncpoint/SyncpointModels.h>
 #import <Syncpoint/SyncpointAuthenticator.h>

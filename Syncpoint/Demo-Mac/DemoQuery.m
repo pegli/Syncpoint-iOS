@@ -14,7 +14,7 @@
 //  and limitations under the License.
 
 #import "DemoQuery.h"
-#import <CouchCocoa/CouchCocoa.h>
+#import <Syncpoint/Syncpoint.h>
 
 
 @interface DemoQuery ()

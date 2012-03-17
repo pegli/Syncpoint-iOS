@@ -15,8 +15,6 @@
 
 #import "DemoAppDelegate.h"
 #import "RootViewController.h"
-#import <CouchCocoa/CouchCocoa.h>
-#import <CouchCocoa/CouchTouchDBServer.h>
 #import <Syncpoint/Syncpoint.h>
 
 

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0430"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,9 +13,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "27EB951214F70D4D00072752"
-               BuildableName = "libSyncpoint.a"
-               BlueprintName = "Syncpoint iOS library"
+               BlueprintIdentifier = "27EDEA571513F6520060EDB9"
+               BuildableName = "Syncpoint iOS Framework"
+               BlueprintName = "Syncpoint iOS Framework"
                ReferencedContainer = "container:Syncpoint.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>

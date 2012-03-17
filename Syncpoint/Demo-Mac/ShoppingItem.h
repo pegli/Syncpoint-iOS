@@ -6,7 +6,7 @@
 //  Copyright (c) 2011 Couchbase, Inc. All rights reserved.
 //
 
-#import <CouchCocoa/CouchCocoa.h>
+#import <Syncpoint/CouchCocoa.h>
 @class NSImage;
 
 

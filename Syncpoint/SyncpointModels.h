@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Couchbase, Inc. All rights reserved.
 //
 
-#import <CouchCocoa/CouchModel.h>
+#import "CouchModel.h"
 @class SyncpointChannel, SyncpointSubscription, SyncpointInstallation;
 
 

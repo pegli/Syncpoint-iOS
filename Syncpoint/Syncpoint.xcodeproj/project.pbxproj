@@ -6,6 +6,21 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		27EDEA571513F6520060EDB9 /* Syncpoint iOS Framework */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 27EDEA581513F6520060EDB9 /* Build configuration list for PBXAggregateTarget "Syncpoint iOS Framework" */;
+			buildPhases = (
+				27EDEA5D1513F6840060EDB9 /* Create Fat Library */,
+			);
+			dependencies = (
+				27EDEA5C1513F6620060EDB9 /* PBXTargetDependency */,
+			);
+			name = "Syncpoint iOS Framework";
+			productName = "Syncpoint iOS Framework";
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		27108C6C15126A6500E5B92C /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27108C6B15126A6500E5B92C /* Security.framework */; };
 		27108C8615127F6300E5B92C /* libfacebook_mac_sdk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27108C8515127F6300E5B92C /* libfacebook_mac_sdk.a */; };
@@ -71,6 +86,13 @@
 
 /* Begin PBXContainerItemProxy section */
 		27EB95B714F87CFE00072752 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 27EB949E14F700AC00072752 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 27EB951214F70D4D00072752;
+			remoteInfo = "Syncpoint iOS library";
+		};
+		27EDEA5B1513F6620060EDB9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 27EB949E14F700AC00072752 /* Project object */;
 			proxyType = 1;
@@ -391,6 +413,7 @@
 				27EB94A414F700AC00072752 /* Frameworks */,
 				27EB94A514F700AC00072752 /* Headers */,
 				27EB94A614F700AC00072752 /* Resources */,
+				27EDEA5F1514083B0060EDB9 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -408,6 +431,8 @@
 				27EB950F14F70D4D00072752 /* Sources */,
 				27EB951014F70D4D00072752 /* Frameworks */,
 				27EB951114F70D4D00072752 /* Headers */,
+				27EDEA5E1514010E0060EDB9 /* Copy CouchCocoa Headers */,
+				27EDEA561513F5990060EDB9 /* Prepare Framework */,
 			);
 			buildRules = (
 			);
@@ -459,6 +484,7 @@
 			targets = (
 				27EB94A714F700AC00072752 /* Syncpoint Mac */,
 				27EB951214F70D4D00072752 /* Syncpoint iOS library */,
+				27EDEA571513F6520060EDB9 /* Syncpoint iOS Framework */,
 				27EB957A14F87C6800072752 /* Syncpoint Demo */,
 				27108C8C1512841600E5B92C /* Syncpoint Mac Demo */,
 			);
@@ -498,6 +524,65 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		27EDEA561513F5990060EDB9 /* Prepare Framework */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Prepare Framework";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Source: <https://github.com/jverkoey/iOS-Framework>\n\nset -e\n\nmkdir -p \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.framework/Versions/A\"\nmkdir -p \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.framework/Versions/A/Headers\"\n\n# Link the \"Current\" version to \"A\"\nln -sfh A \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.framework/Versions/Current\"\nln -sfh Versions/Current/Headers \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.framework/Headers\"\nln -sfh \"Versions/Current/${PRODUCT_NAME}\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.framework/${PRODUCT_NAME}\"\n\n# The -a ensures that the headers maintain the source modification date so that we don't constantly\n# cause propagating rebuilds of files that import these headers.\ncp -a \"${TARGET_BUILD_DIR}/${PUBLIC_HEADERS_FOLDER_PATH}/\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.framework/Versions/A/Headers\"\n";
+		};
+		27EDEA5D1513F6840060EDB9 /* Create Fat Library */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Create Fat Library";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Source: https://github.com/jverkoey/iOS-Framework>\n\nset -e\nset +u\n# Avoid recursively calling this script.\nif [[ $SF_MASTER_SCRIPT_RUNNING ]]\nthen\nexit 0\nfi\nset -u\nexport SF_MASTER_SCRIPT_RUNNING=1\n\nSF_TARGET_NAME=${PROJECT_NAME}\nSF_EXECUTABLE_PATH=\"lib${SF_TARGET_NAME}.a\"\nSF_WRAPPER_NAME=\"${SF_TARGET_NAME}.framework\"\n\n# The following conditionals come from\n# https://github.com/kstenerud/iOS-Universal-Framework\n\nif [[ \"$SDK_NAME\" =~ ([A-Za-z]+) ]]\nthen\nSF_SDK_PLATFORM=${BASH_REMATCH[1]}\nelse\necho \"Could not find platform name from SDK_NAME: $SDK_NAME\"\nexit 1\nfi\n\nif [[ \"$SDK_NAME\" =~ ([0-9]+.*$) ]]\nthen\nSF_SDK_VERSION=${BASH_REMATCH[1]}\nelse\necho \"Could not find sdk version from SDK_NAME: $SDK_NAME\"\nexit 1\nfi\n\nif [[ \"$SF_SDK_PLATFORM\" = \"iphoneos\" ]]\nthen\nSF_OTHER_PLATFORM=iphonesimulator\nSF_ARCHS=i386\nelse\nSF_OTHER_PLATFORM=iphoneos\nSF_ARCHS=\"armv7\"\nfi\n\nif [[ \"$BUILT_PRODUCTS_DIR\" =~ (.*)$SF_SDK_PLATFORM$ ]]\nthen\nSF_OTHER_BUILT_PRODUCTS_DIR=\"${BASH_REMATCH[1]}${SF_OTHER_PLATFORM}\"\nelse\necho \"Could not find platform name from build products directory: $BUILT_PRODUCTS_DIR\"\nexit 1\nfi\n\n# Build the other platform.\nxcodebuild -project \"${PROJECT_FILE_PATH}\" -target \"${TARGET_NAME}\" -configuration \"${CONFIGURATION}\" -sdk ${SF_OTHER_PLATFORM}${SF_SDK_VERSION} BUILD_DIR=\"${BUILD_DIR}\" CONFIGURATION_TEMP_DIR=\"${PROJECT_TEMP_DIR}/${CONFIGURATION}-${SF_OTHER_PLATFORM}\" ARCHS=\"${SF_ARCHS}\" $ACTION\n\n# Smash the two static libraries into one fat binary and store it in the .framework\nlipo -create \"${BUILT_PRODUCTS_DIR}/${SF_EXECUTABLE_PATH}\" \"${SF_OTHER_BUILT_PRODUCTS_DIR}/${SF_EXECUTABLE_PATH}\" -output \"${BUILT_PRODUCTS_DIR}/${SF_WRAPPER_NAME}/Versions/A/${SF_TARGET_NAME}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		27EDEA5E1514010E0060EDB9 /* Copy CouchCocoa Headers */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy CouchCocoa Headers";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\n\ncp \"${BUILT_PRODUCTS_DIR}/CouchCocoa/\"*.h \"${BUILT_PRODUCTS_DIR}/${PUBLIC_HEADERS_FOLDER_PATH}\"\n";
+		};
+		27EDEA5F1514083B0060EDB9 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\n\ncp \"${BUILT_PRODUCTS_DIR}/CouchCocoa/\"*.h \"${BUILT_PRODUCTS_DIR}/${PUBLIC_HEADERS_FOLDER_PATH}\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		27108C891512841600E5B92C /* Sources */ = {
@@ -552,6 +637,11 @@
 			target = 27EB951214F70D4D00072752 /* Syncpoint iOS library */;
 			targetProxy = 27EB95B714F87CFE00072752 /* PBXContainerItemProxy */;
 		};
+		27EDEA5C1513F6620060EDB9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 27EB951214F70D4D00072752 /* Syncpoint iOS library */;
+			targetProxy = 27EDEA5B1513F6620060EDB9 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -575,9 +665,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/Demo-Mac/Frameworks\"",
 				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				INFOPLIST_FILE = "Demo-Mac/Demo-Mac-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(CONFIGURATION_BUILD_DIR)/Syncpoint.framework/Headers";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -591,9 +681,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/Demo-Mac/Frameworks\"",
 				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				INFOPLIST_FILE = "Demo-Mac/Demo-Mac-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(CONFIGURATION_BUILD_DIR)/Syncpoint.framework/Headers";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -610,8 +700,8 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = SyncpointPrefix.pch;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -627,7 +717,7 @@
 					../TouchDB/Source,
 					../TouchDB/vendor/MYUtilities,
 					"../vendor/facebook-ios-sdk/src",
-					"$(CONFIGURATION_BUILD_DIR)",
+					"../CouchCocoa/**",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
@@ -647,8 +737,8 @@
 				FRAMEWORK_SEARCH_PATHS = "$(CONFIGURATION_BUILD_DIR)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = SyncpointPrefix.pch;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -659,7 +749,7 @@
 					../TouchDB/Source,
 					../TouchDB/vendor/MYUtilities,
 					"../vendor/facebook-ios-sdk/src",
-					"$(CONFIGURATION_BUILD_DIR)",
+					"../CouchCocoa/**",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				SDKROOT = macosx;
@@ -674,6 +764,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = SyncpointPrefix.pch;
 				INFOPLIST_FILE = "Syncpoint-Info.plist";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = Syncpoint;
@@ -688,6 +779,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = SyncpointPrefix.pch;
 				INFOPLIST_FILE = "Syncpoint-Info.plist";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = Syncpoint;
@@ -699,8 +791,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = NO;
 				DSTROOT = /tmp/Syncpoint_iOS_library.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = SyncpointPrefix.pch;
+				HEADER_SEARCH_PATHS = (
+					../TouchDB/Source,
+					../TouchDB/vendor/MYUtilities,
+					"../vendor/facebook-ios-sdk/src",
+					"../CouchCocoa/**",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -712,6 +813,7 @@
 				PUBLIC_HEADERS_FOLDER_PATH = Headers;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				STRIP_STYLE = "non-global";
 			};
 			name = Debug;
 		};
@@ -719,8 +821,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = NO;
 				DSTROOT = /tmp/Syncpoint_iOS_library.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = SyncpointPrefix.pch;
+				HEADER_SEARCH_PATHS = (
+					../TouchDB/Source,
+					../TouchDB/vendor/MYUtilities,
+					"../vendor/facebook-ios-sdk/src",
+					"../CouchCocoa/**",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -732,6 +843,7 @@
 				PUBLIC_HEADERS_FOLDER_PATH = Headers;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				STRIP_STYLE = "non-global";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -741,13 +853,14 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Demo-iOS/Syncpoint Demo-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "$(CONFIGURATION_BUILD_DIR)/Syncpoint.framework/Headers";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -757,7 +870,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Demo-iOS/Syncpoint Demo-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
@@ -765,8 +878,27 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "$(CONFIGURATION_BUILD_DIR)/Syncpoint.framework/Headers";
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		27EDEA591513F6520060EDB9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		27EDEA5A1513F6520060EDB9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
 			};
 			name = Release;
 		};
@@ -817,6 +949,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		27EDEA581513F6520060EDB9 /* Build configuration list for PBXAggregateTarget "Syncpoint iOS Framework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27EDEA591513F6520060EDB9 /* Debug */,
+				27EDEA5A1513F6520060EDB9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};

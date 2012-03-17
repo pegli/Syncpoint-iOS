@@ -19,7 +19,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <CouchCocoa/CouchUITableSource.h>
+#import <Syncpoint/CouchUITableSource.h>
 @class CouchDatabase, CouchPersistentReplication, Syncpoint;
 
 

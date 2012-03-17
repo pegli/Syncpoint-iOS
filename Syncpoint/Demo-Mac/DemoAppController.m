@@ -19,9 +19,6 @@
 #import "Test.h"
 #import "MYBlockUtils.h"
 #import <Syncpoint/Syncpoint.h>
-#import <CouchCocoa/CouchCocoa.h>
-#import <CouchCocoa/CouchTouchDBServer.h>
-#import <CouchCocoa/CouchDesignDocument_Embedded.h>
 
 #undef FOR_TESTING_PURPOSES
 #ifdef FOR_TESTING_PURPOSES

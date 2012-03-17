@@ -8,7 +8,7 @@
 
 #import "SyncpointModels.h"
 #import "SyncpointInternal.h"
-#import <CouchCocoa/CouchModelFactory.h>
+#import "CouchModelFactory.h"
 #import "TDMisc.h"
 #import "CollectionUtils.h"
 #import <Security/SecRandom.h>

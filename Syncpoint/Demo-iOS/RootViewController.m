@@ -22,8 +22,8 @@
 #import "ConfigViewController.h"
 #import "DemoAppDelegate.h"
 
-#import <CouchCocoa/CouchCocoa.h>
-#import <CouchCocoa/CouchDesignDocument_Embedded.h>
+#import <Syncpoint/CouchCocoa.h>
+#import <Syncpoint/CouchDesignDocument_Embedded.h>
 
 
 @interface RootViewController ()
