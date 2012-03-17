@@ -14,7 +14,7 @@
 #import "TDMisc.h"
 
 
-#define kSessionDatabaseName @"sessions"
+#define kLocalControlDatabaseName @"sp_control"
 
 
 @interface SyncpointClient ()
@@ -27,12 +27,12 @@
     @private
     NSURL* _remote;
     CouchServer* _server;
-    CouchDatabase* _sessionDatabase;
+    CouchDatabase* _localControlDatabase;
     SyncpointSession* _session;
-    CouchReplication *_sessionPull;
-    CouchReplication *_sessionPush;
+    CouchReplication *_controlPull;
+    CouchReplication *_controlPush;
     SyncpointAuthenticator* _authenticator;
-    BOOL _observingSessionPull;
+    BOOL _observingControlPull;
     SyncpointState _state;
 }
 
@@ -51,18 +51,18 @@
         _server = localServer;
         _remote = remoteServerURL;
         
-        // Create the session database on the first run of the app.
-        _sessionDatabase = [_server databaseNamed: kSessionDatabaseName];
-        if (![_sessionDatabase ensureCreated: outError])
+        // Create the control database on the first run of the app.
+        _localControlDatabase = [_server databaseNamed: kLocalControlDatabaseName];
+        if (![_localControlDatabase ensureCreated: outError])
             return nil;
-        _sessionDatabase.tracksChanges = YES;
-        _session = [SyncpointSession sessionInDatabase: _sessionDatabase];
+        _localControlDatabase.tracksChanges = YES;
+        _session = [SyncpointSession sessionInDatabase: _localControlDatabase];
 
         if (_session) {
             if (_session.isActive) {
                 LogTo(Syncpoint, @"Session is active");
                 [self connectToControlDB];
-                [self observeSessionDatabase];
+                [self observeControlDatabase];
             } else if (nil != _session.error) {
                 LogTo(Syncpoint, @"Session has error: %@", _session.error.localizedDescription);
                 _state = kSyncpointHasError;
@@ -82,7 +82,7 @@
 
 - (void)dealloc {
     _authenticator.syncpoint = nil;
-    [self stopObservingSessionPull];
+    [self stopObservingControlPull];
     [[NSNotificationCenter defaultCenter] removeObserver: self];
 }
 
@@ -117,7 +117,7 @@ authenticatedWithToken: (id)accessToken
         return;
     
     LogTo(Syncpoint, @"Authenticated! %@=\"%@\"", tokenType, accessToken);
-    _session = [SyncpointSession makeSessionInDatabase: _sessionDatabase
+    _session = [SyncpointSession makeSessionInDatabase: _localControlDatabase
                                               withType: authenticator.authDocType
                                              tokenType: tokenType
                                                  token: accessToken
@@ -141,59 +141,59 @@ authenticatedWithToken: (id)accessToken
 }
 
 
-#pragma mark - SESSION DATABASE & SYNC:
+#pragma mark - CONTROL DATABASE & SYNC:
 
 
-- (CouchReplication*) pullSessionFromDatabaseNamed: (NSString*)dbName {
+- (CouchReplication*) pullControlDataFromDatabaseNamed: (NSString*)dbName {
     NSURL* url = [NSURL URLWithString: dbName relativeToURL: _remote];
-    return [_sessionDatabase pullFromDatabaseAtURL: url];
+    return [_localControlDatabase pullFromDatabaseAtURL: url];
 }
 
-- (CouchReplication*) pushSessionToDatabaseNamed: (NSString*)dbName {
+- (CouchReplication*) pushControlDataToDatabaseNamed: (NSString*)dbName {
     NSURL* url = [NSURL URLWithString: dbName relativeToURL: _remote];
-    return [_sessionDatabase pushToDatabaseAtURL: url];
+    return [_localControlDatabase pushToDatabaseAtURL: url];
 }
 
 
-// Starts an async bidirectional sync of the _session in the _sessionDatabase.
+// Starts an async bidirectional sync of the _session in the _localControlDatabase.
 - (void) activateSession {
     LogTo(Syncpoint, @"Activating session document...");
     Assert(!_session.isActive);
     [_session clearState: nil];
     self.state = kSyncpointActivating;
     NSString* sessionID = _session.document.documentID;
-    [self pushSessionToDatabaseNamed: kSessionDatabaseName];
-    _sessionPull = [self pullSessionFromDatabaseNamed: kSessionDatabaseName];
-    _sessionPull.filter = @"_doc_ids";
-    _sessionPull.filterParams = $dict({@"doc_ids", $sprintf(@"[\"%@\"]", sessionID)});
-    _sessionPull.continuous = YES;
+    [self pushControlDataToDatabaseNamed: kLocalControlDatabaseName];
+    _controlPull = [self pullControlDataFromDatabaseNamed: kLocalControlDatabaseName];
+    _controlPull.filter = @"_doc_ids";
+    _controlPull.filterParams = $dict({@"doc_ids", $sprintf(@"[\"%@\"]", sessionID)});
+    _controlPull.continuous = YES;
     
-    //    ok now we should listen to changes on the session db and stop replication 
+    //    ok now we should listen to changes on the control db and stop replication 
     //    when we get our doc back in a finalized state
-    [self observeSessionDatabase];
+    [self observeControlDatabase];
 }
 
 
-// Begins observing document changes in the _sessionDatabase.
-- (void) observeSessionDatabase {
-    Assert(_sessionDatabase);
+// Begins observing document changes in the _localControlDatabase.
+- (void) observeControlDatabase {
+    Assert(_localControlDatabase);
     [[NSNotificationCenter defaultCenter] addObserver: self 
-                                             selector: @selector(sessionDatabaseChanged)
+                                             selector: @selector(controlDatabaseChanged)
                                                  name: kCouchDatabaseChangeNotification 
-                                               object: _sessionDatabase];
+                                               object: _localControlDatabase];
 }
 
-- (void) sessionDatabaseChanged {
+- (void) controlDatabaseChanged {
     if (_state > kSyncpointActivating) {
-        LogTo(Syncpoint, @"Session DB changed");
+        LogTo(Syncpoint, @"Control DB changed");
         [self getUpToDateWithSubscriptions];
         
     } else if (_session.isActive) {
         LogTo(Syncpoint, @"Session is now active!");
-        [_sessionPull stop];
-        _sessionPull = nil;
-        [_sessionPush stop];
-        _sessionPush = nil;
+        [_controlPull stop];
+        _controlPull = nil;
+        [_controlPush stop];
+        _controlPush = nil;
         [self connectToControlDB];
     } else if (_state != kSyncpointHasError) {
         NSError* error = _session.error;
@@ -212,28 +212,28 @@ authenticatedWithToken: (id)accessToken
     Assert(controlDBName);
     
     // During the initial sync, make the pull non-continuous, and observe when it stops.
-    // That way we know when the session DB has been updated from the server.
-    _sessionPull = [self pullSessionFromDatabaseNamed: controlDBName];
-    [_sessionPull addObserver: self forKeyPath: @"running" options: 0 context: NULL];
-    _observingSessionPull = YES;
+    // That way we know when the control DB has been fully updated from the server.
+    _controlPull = [self pullControlDataFromDatabaseNamed: controlDBName];
+    [_controlPull addObserver: self forKeyPath: @"running" options: 0 context: NULL];
+    _observingControlPull = YES;
     
-    _sessionPush = [self pushSessionToDatabaseNamed: controlDBName];
-    _sessionPush.continuous = YES;
+    _controlPush = [self pushControlDataToDatabaseNamed: controlDBName];
+    _controlPush.continuous = YES;
 
-    self.state = kSyncpointUpdatingSession;
+    self.state = kSyncpointUpdatingControlDatabase;
 }
 
 
-// Observes when the initial _sessionPull stops running, after -connectToControlDB.
+// Observes when the initial _controlPull stops running, after -connectToControlDB.
 - (void) observeValueForKeyPath: (NSString*)keyPath ofObject: (id)object 
                          change: (NSDictionary*)change context: (void*)context
 {
-    if (object == _sessionPull && !_sessionPull.running) {
+    if (object == _controlPull && !_controlPull.running) {
         LogTo(Syncpoint, @"Up-to-date with control database");
-        [self stopObservingSessionPull];
+        [self stopObservingControlPull];
         // Now start the pull up again, in continuous mode:
-        _sessionPull = [self pullSessionFromDatabaseNamed: _session.control_database];
-        _sessionPull.continuous = YES;
+        _controlPull = [self pullControlDataFromDatabaseNamed: _session.control_database];
+        _controlPull.continuous = YES;
         self.state = kSyncpointReady;
         LogTo(Syncpoint, @"**READY**");
 
@@ -242,15 +242,15 @@ authenticatedWithToken: (id)accessToken
 }
 
 
-- (void) stopObservingSessionPull {
-    if (_observingSessionPull) {
-        [_sessionPull removeObserver: self forKeyPath: @"running"];
-        _observingSessionPull = NO;
+- (void) stopObservingControlPull {
+    if (_observingControlPull) {
+        [_controlPull removeObserver: self forKeyPath: @"running"];
+        _observingControlPull = NO;
     }
 }
 
 
-// Called when the session database changes or is pulled from the server.
+// Called when the control database changes or is initial pulled from the server.
 - (void) getUpToDateWithSubscriptions {
     // Make installations for any subscriptions that don't have one:
     NSSet* installedSubscriptions = _session.installedSubscriptions;

@@ -15,7 +15,7 @@ typedef enum {
     kSyncpointUnauthenticated,  /**< No session, and no auth token to pair with */
     kSyncpointAuthenticating,   /**< Authenticating user credentials (e.g. by OAuth) */
     kSyncpointActivating,       /**< Got auth token, now setting up with the server */
-    kSyncpointUpdatingSession,  /**< Syncing session changes with the server */
+    kSyncpointUpdatingControlDatabase,  /**< Syncing session changes with the server */
     kSyncpointReady             /**< In sync with the server, ready to go */
 } SyncpointState;
 
