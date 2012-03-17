@@ -15,6 +15,7 @@
 
 
 #define kLocalControlDatabaseName @"sp_control"
+#define kRemoteHandshakeDatabaseName @"sp_handshake"
 
 
 @interface SyncpointClient ()
@@ -162,8 +163,8 @@ authenticatedWithToken: (id)accessToken
     [_session clearState: nil];
     self.state = kSyncpointActivating;
     NSString* sessionID = _session.document.documentID;
-    [self pushControlDataToDatabaseNamed: kLocalControlDatabaseName];
-    _controlPull = [self pullControlDataFromDatabaseNamed: kLocalControlDatabaseName];
+    [self pushControlDataToDatabaseNamed: kRemoteHandshakeDatabaseName];
+    _controlPull = [self pullControlDataFromDatabaseNamed: kRemoteHandshakeDatabaseName];
     _controlPull.filter = @"_doc_ids";
     _controlPull.filterParams = $dict({@"doc_ids", $sprintf(@"[\"%@\"]", sessionID)});
     _controlPull.continuous = YES;
