@@ -26,11 +26,13 @@
     @param type  The value the documents "type" property should have.
     @param tokenType  The property name of the document's auth token.
     @param token  The value of the auth token.
+    @param appId  The ID of this app on the Syncpoint cluster
     @return  The new SyncpointSession instance. */
 + (SyncpointSession*) makeSessionInDatabase: (CouchDatabase*)database
                                    withType: (NSString*)type
                                   tokenType: (NSString*)tokenType
                                       token: (NSString*)token
+                                      appId: (NSString*)appId
                                       error: (NSError**)outError;
 
 @property (readwrite) NSDictionary* oauth_creds;

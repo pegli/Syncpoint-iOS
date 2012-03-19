@@ -27,6 +27,7 @@
 {
     @private
     NSURL* _remote;
+    NSString* _appId;
     CouchServer* _server;
     CouchDatabase* _localControlDatabase;
     SyncpointSession* _session;
@@ -38,11 +39,12 @@
 }
 
 
-@synthesize localServer=_server, state=_state, session=_session;
+@synthesize localServer=_server, state=_state, session=_session, appId=_appId;
 
 
 - (id) initWithLocalServer: (CouchServer*)localServer
               remoteServer: (NSURL*)remoteServerURL
+                     appId: (NSString*)syncpointAppId
                      error: (NSError**)outError
 {
     CAssert(localServer);
@@ -51,7 +53,7 @@
     if (self) {
         _server = localServer;
         _remote = remoteServerURL;
-        
+        _appId = syncpointAppId;
         // Create the control database on the first run of the app.
         _localControlDatabase = [_server databaseNamed: kLocalControlDatabaseName];
         if (![_localControlDatabase ensureCreated: outError])
@@ -122,6 +124,7 @@ authenticatedWithToken: (id)accessToken
                                               withType: authenticator.authDocType
                                              tokenType: tokenType
                                                  token: accessToken
+                                                 appId: _appId
                                                  error: nil];   // TOD: Report error
     _authenticator = nil;
     if (_session)

@@ -97,12 +97,14 @@ static NSEnumerator* modelsOfType(CouchDatabase* database, NSString* type) {
                                    withType: (NSString*)type
                                   tokenType: (NSString*)tokenType
                                       token: (NSString*)token
+                                      appId: (NSString*)appId
                                       error: (NSError**)outError
 {
     LogTo(Syncpoint, @"Creating session %@ in %@", type, database);
     SyncpointSession* session = [[self alloc] initWithNewDocumentInDatabase: database];
     [session setValue: type ofProperty: @"type"];
     [session setValue: token ofProperty: tokenType];
+    [session setValue: appId ofProperty: @"app_id"];
     session.state = @"new";
     NSDictionary* oauth_creds = $dict({@"consumer_key", randomString()},
                                       {@"consumer_secret", randomString()},

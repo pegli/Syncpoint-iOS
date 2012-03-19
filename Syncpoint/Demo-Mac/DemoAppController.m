@@ -32,6 +32,7 @@ static TDListener* sListener;
 //#define kServerURLString @"http://single.couchbase.net/"
 #define kServerURLString @"http://localhost:5984/"
 
+#define kSyncpointAppId @"demo-app"
 
 #define kChangeGlowDuration 3.0
 
@@ -111,6 +112,7 @@ int main (int argc, const char * argv[]) {
     [SyncpointFacebookAuth setFacebookAppID: @"251541441584833"];
     _syncpoint = [[SyncpointClient alloc] initWithLocalServer: server
                                                remoteServer: remote
+                                                        appId:kSyncpointAppId
                                                       error: &error];
     if (!_syncpoint) {
         NSLog(@"Syncpoint failed to start: %@", error);

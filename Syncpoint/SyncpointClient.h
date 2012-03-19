@@ -26,13 +26,18 @@ typedef enum {
 /** Initializes a SyncpointClient instance.
     @param localServer  The application's local server object.
     @param remoteServer  The URL of the remote Syncpoint-enabled server.
+    @param appId  The id used to relate the client code to the server storage.
     @param error  If initialization fails, this parameter will be filled in with an error.
     @return  The Syncpoint instance, or nil on failure. */
 - (id) initWithLocalServer: (CouchServer*)localServer
               remoteServer: (NSURL*)remoteServerURL
+                     appId: (NSString*)syncpointAppId
                      error: (NSError**)error;
 
 @property (readonly, nonatomic) CouchServer* localServer;
+
+/** The id used to relate the client code to the server storage. */
+@property (readonly, nonatomic) NSString* appId;
 
 /** Current state (see SyncpointState enum above). Observable. */
 @property (readonly, nonatomic) SyncpointState state;

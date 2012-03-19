@@ -21,6 +21,8 @@
 #define kServerURLString @"http://single.couchbase.net/"
 //#define kServerURLString @"http://localhost:5984/"
 
+#define kSyncpointAppId @"demo-app"
+
 
 @implementation DemoAppDelegate
 
@@ -61,6 +63,7 @@
     [SyncpointFacebookAuth setFacebookAppID: @"251541441584833"];
     self.syncpoint = [[SyncpointClient alloc] initWithLocalServer: server
                                                remoteServer: remote
+                                                      appId: kSyncpointAppId
                                                       error: &error];
     if (!syncpoint) {
         NSLog(@"Syncpoint failed to start: %@", error);
